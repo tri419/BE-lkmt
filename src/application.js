@@ -18,7 +18,7 @@ const {
     process.env.TZ = 'Asia/Ho_Chi_Minh';
     const port = Utils.getInteger(
       config.port,
-      Utils.getInteger(process.env.PORT, 3006),
+      Utils.getInteger(process.env.PORT, 3000),
     );
 
     logger.info('Booting');
