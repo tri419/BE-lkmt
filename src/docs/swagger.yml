@@ -1,0 +1,64 @@
+swagger: "2.0"
+info:
+  description: API Orders Service
+  version: 1.0.0
+  title: API Orders Service
+  termsOfService: ""
+  contact:
+    email: hangtrinh01644776739@gmail.com
+host: api.127.0.0.1.xip.ip
+basePath: /api/v1
+tags: []
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /health/ping:
+    get:
+      x-swagger-router-controller: health
+      operationId: ping
+      description: Endpoint for health checking
+      tags:
+        - health
+      responses:
+        "200":
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Pong"
+  /health/stats:
+    get:
+      x-swagger-router-controller: health
+      operationId: system stats
+      tags:
+        - health
+      responses:
+        "200":
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/Pong"
+
+definitions:
+  Pong:
+    type: object
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: Error's code
+      type:
+        type: string
+        description: Error's type
+      message:
+        type: string
+        description: Error's message
