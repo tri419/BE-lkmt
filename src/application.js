@@ -22,7 +22,7 @@ const {
     );
 
     logger.info('Booting');
-    process.env.ENV_RAPID7 === 'QC' ? loggerService.info('Booting') : null;
+    process.env.ENV_RAPID7 === 'dev' ? loggerService.info('Booting') : null;
     //mongoose
     await initMongoose();
     // //SNS AWS
