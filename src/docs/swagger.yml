@@ -1,9 +1,9 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   description: API Orders Service
   version: 1.0.0
   title: API Orders Service
-  termsOfService: ""
+  termsOfService: ''
   contact:
     email: caotri1242001@gmail.com
 host: api.127.0.0.1.xip.ip
@@ -26,12 +26,12 @@ paths:
       tags:
         - health
       responses:
-        "200":
+        '200':
           description: Pong
           schema:
             type: object
             items:
-              $ref: "#/definitions/Pong"
+              $ref: '#/definitions/Pong'
   /health/stats:
     get:
       x-swagger-router-controller: health
@@ -39,12 +39,150 @@ paths:
       tags:
         - health
       responses:
-        "200":
+        '200':
           description: Pong
           schema:
             type: object
             items:
-              $ref: "#/definitions/Pong"
+              $ref: '#/definitions/Pong'
+  /product:
+    post:
+      x-swagger-router-controller: product
+      operationId: create
+      description: Create new product
+      tags:
+        - ERP-product
+      parameters:
+        - in: body
+          name: product
+          description: Data product
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: product
+      operationId: search
+      description: Search product
+      tags:
+        - ERP-product
+      parameters:
+        - name: code
+          type: string
+          in: query
+          required: false
+        - name: name
+          type: string
+          in: query
+          required: false
+        - name: status
+          type: string
+          in: query
+          required: false
+        - name: page
+          type: string
+          in: query
+          required: false
+        - name: limit
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /product/{uid}:
+    put:
+      x-swagger-router-controller: product
+      operationId: update
+      description: Update product by Id
+      tags:
+        - ERP-product
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: product
+          description: Data product
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    delete:
+      x-swagger-router-controller: product
+      operationId: delete
+      description: Delete Product By Id
+      tags:
+        - ERP-product
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: product
+      operationId: view
+      description: View product
+      tags:
+        - ERP-product
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /product/status/{uid}:
+    put:
+      x-swagger-router-controller: product
+      operationId: status
+      description: Status product by id
+      tags:
+        - ERP-product
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: product
+          description: Data product
+          schema:
+            $ref: '#/definitions/productStatus'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 
 definitions:
   Pong:
@@ -62,3 +200,57 @@ definitions:
       message:
         type: string
         description: Error's message
+  Product:
+    type: object
+    properties:
+      code:
+        type: string
+        example: NSTest65444
+      name:
+        type: string
+        example: Cao Trí
+      nameUnsigned:
+        type: string
+        example: Cao Tri
+      price:
+        type: number
+        example: 3000
+      status:
+        type: boolean
+        example: true
+      discount:
+        type: number
+        example: 10
+      discountPrice:
+        type: number
+        example: 2700
+      expiryDate:
+        type: number
+        example: 24
+      productType:
+        type: string
+        example: 01FX2F9X4V97A9Q3RCX98AR3TB
+      brand:
+        type: string
+        example: Asus, Acer
+      image:
+        type: array
+        items:
+          type: string
+      descriptionSummary:
+        type: string
+        example: Sản phẩm thuộc thương hiệu ...
+      descriptionDetail:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+  productStatus:
+    type: object
+    properties:
+      status:
+        type: boolean

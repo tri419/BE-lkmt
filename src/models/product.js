@@ -52,6 +52,8 @@ class Product extends Base {
       output.image = input.image;
       output.descriptionSummary = input.descriptionSummary;
       output.descriptionDetail = input.descriptionDetail;
+      output.createdAt = input.createdAt;
+      output.updatedAt = input.updatedAt;
     }
     return output;
   }
@@ -64,6 +66,30 @@ class Product extends Base {
     const output = new Product();
     if (input != null) {
       output.uid = Utils.getString(input.uid, '');
+      output.brand = Utils.getString(input.brand, '');
+      output.code = Utils.getString(input.code, '');
+      output.name = Utils.getString(input.name, '');
+      output.productType = Utils.getString(input.productType, '');
+      output.nameUnsigned = Utils.getString(Utils.tvkd(input.name), '');
+      output.price = Utils.getInteger(input.price, '');
+      output.status = Utils.getBoolean(input.status, true);
+      output.discount = Utils.getInteger(input.discount, '');
+      output.discountPrice = Utils.getInteger(input.discountPrice, '');
+      output.expiryDate = Utils.getInteger(input.expiryDate, 0);
+      output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
+      output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
+      output.image = Utils.getArray(input.image, []);
+      output.includedFields = Utils.extractIncludeAttributes(
+        input.includedFields,
+      );
+    }
+    output.name = output.name.trim().replace(/\s\s+/g, ' ');
+    output.nameUnsigned = output.nameUnsigned.trim().replace(/\s\s+/g, ' ');
+    return output;
+  }
+  static fromUpdateProduct(input) {
+    const output = {};
+    if (input != null) {
       output.brand = Utils.getString(input.brand, '');
       output.code = Utils.getString(input.code, '');
       output.name = Utils.getString(input.name, '');

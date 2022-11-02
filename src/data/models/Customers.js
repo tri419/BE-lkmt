@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
 const { getDefaultDB } = require('../../infrastructures/mongoose');
-const { hashText } = require('../../libs/bcrypt_helper');
+
 const schema = mongoose.Schema;
 
-const UserSchema = new schema(
+const CustomerSchema = mongoose.Schema(
   {
     uid: {
       type: String,
@@ -33,13 +33,23 @@ const UserSchema = new schema(
       type: String,
       required: true,
     },
-    email: {
+    firstName: {
       type: String,
-      required: true,
+    },
+    lastName: {
+      type: String,
+    },
+    dateOfBirth: {
+      type: String,
+    },
+    sex: {
+      type: String,
     },
     phone: {
       type: String,
-      required: true,
+    },
+    email: {
+      type: String,
     },
     status: {
       type: Boolean,
@@ -48,17 +58,27 @@ const UserSchema = new schema(
     avatar: {
       type: String,
     },
-    roleId: {
-      type: String,
-      required: true,
-    },
+    address: [
+      {
+        street: {
+          type: String,
+        },
+        province: {
+          type: String,
+        },
+        district: {
+          type: String,
+        },
+        ward: {
+          type: String,
+        },
+        status: {
+          type: Boolean,
+        },
+      },
+    ],
   },
   { timestamps: true },
 );
-UserSchema.pre('save', function (next) {
-  const user = this;
-  user.password = hashText(user.password);
-  next();
-});
-UserSchema.plugin(mongooseDelete, { overrideMethods: true });
-module.exports = getDefaultDB().model('Users', UserSchema);
+CustomerSchema.plugin(mongooseDelete, { overrideMethods: true });
+module.exports = getDefaultDB().model('Customers', CustomerSchema);
