@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
 const { getDefaultDB } = require('../../infrastructures/mongoose');
-
+const { hashText } = require('../../libs/bcrypt_helper');
 const schema = mongoose.Schema;
 
 const CustomerSchema = mongoose.Schema(
@@ -26,12 +26,10 @@ const CustomerSchema = mongoose.Schema(
     },
     username: {
       type: String,
-      unique: true,
       required: true,
     },
     password: {
       type: String,
-      required: true,
     },
     firstName: {
       type: String,
@@ -47,9 +45,11 @@ const CustomerSchema = mongoose.Schema(
     },
     phone: {
       type: String,
+      required: true,
     },
     email: {
       type: String,
+      required: true,
     },
     status: {
       type: Boolean,
@@ -80,5 +80,10 @@ const CustomerSchema = mongoose.Schema(
   },
   { timestamps: true },
 );
+CustomerSchema.pre('save', function (next) {
+  const customer = this;
+  customer.password = hashText(customer.password);
+  next();
+});
 CustomerSchema.plugin(mongooseDelete, { overrideMethods: true });
 module.exports = getDefaultDB().model('Customers', CustomerSchema);

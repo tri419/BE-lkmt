@@ -4,4 +4,6 @@ module.exports = {
   ProductModel: require('./product'),
   UserModel: require('./user'),
   BrandModel: require('./brand'),
+  ProductTypeModel: require('./productType'),
+  CustomerModel: require('./customer'),
 };

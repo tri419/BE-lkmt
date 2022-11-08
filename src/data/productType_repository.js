@@ -2,45 +2,45 @@
 
 const { defaultsDeep } = require('lodash');
 const BaseRepository = require('./base_repository');
-const ProductDto = require('./models/Products');
+const ProductTypeDto = require('./models/ProductTypes');
 
-const { CollectionModel, ProductModel } = require('../models');
+const { CollectionModel, ProductTypeModel } = require('../models');
 const { logger } = require('../libs/logger');
 const { Utils } = require('../libs/utils');
 
 const defaultOpts = {};
 
-class ProductRepository extends BaseRepository {
+class ProductTypeRepository extends BaseRepository {
   /**
    *
    * @param {*} query
    * @param {Number} limit
    * @param {Number} page
    * @param {Boolean} count with count number of records
-   * @returns {Promise<CollectionModel<ProductModel>>}
+   * @returns {Promise<CollectionModel<ProductTypeModel>>}
    */
-  async findProduct(query = {}, limit = 10, page = 1, count = false) {
+  async findProductType(query = {}, limit = 10, page = 1, count = false) {
     const coll = new CollectionModel();
     coll.page = page;
     coll.limit = limit;
     try {
-      const docs = await ProductDto.find(query)
+      const docs = await ProductTypeDto.find(query)
         .limit(limit)
         .skip((page - 1) * limit)
         .sort({ createdAt: -1 });
       if (docs.length > 0) {
-        coll.data = docs.map((item) => ProductModel.fromMongo(item));
+        coll.data = docs.map((item) => ProductTypeModel.fromMongo(item));
       }
-      coll.total = count ? await ProductDto.count(query) : docs.length;
+      coll.total = count ? await ProductTypeDto.count(query) : docs.length;
     } catch (err) {
       logger.error(err, err.message);
     }
     return coll;
   }
   async findAllData(data) {
-    let coll = await ProductDto.find({ ...data });
+    let coll = await ProductTypeDto.find({ ...data });
     if (coll.length > 0) {
-      coll = coll.map((item) => ProductModel.fromMongo(item));
+      coll = coll.map((item) => ProductTypeModel.fromMongo(item));
     }
     return coll;
   }
@@ -48,7 +48,7 @@ class ProductRepository extends BaseRepository {
     if (data == null) {
       return;
     }
-    const doc = await ProductDto.insertMany(data);
+    const doc = await ProductTypeDto.insertMany(data);
     if (doc != null) {
       return true;
     }
@@ -57,29 +57,24 @@ class ProductRepository extends BaseRepository {
     if (data == null) {
       return;
     }
-    const doc = await new ProductDto(data).save();
-    const inserted = ProductModel.fromMongo(doc);
+    const doc = await new ProductTypeDto(data).save();
+    const inserted = ProductTypeModel.fromMongo(doc);
     return inserted;
   }
   async findOne(key, value) {
-    const coll = await ProductDto.findOne({ [key]: value });
-    const inserted = ProductModel.fromMongo(coll);
+    const coll = await ProductTypeDto.findOne({ [key]: value });
+    const inserted = ProductTypeModel.fromMongo(coll);
     return inserted;
   }
-  //   async findOneDate(data) {
-  //     const coll = await ProductDto.findOne(data);
-  //     const inserted = ProductModel.fromMongo(coll);
-  //     return inserted;
-  //   }
   async findData(data) {
-    const docs = await ProductDto.find(data);
-    const coll = docs.map((item) => ProductModel.fromMongo(item));
+    const docs = await ProductTypeDto.find(data);
+    const coll = docs.map((item) => ProductTypeModel.fromMongo(item));
     return coll;
   }
 
   async update(query = {}, update = {}) {
     try {
-      const coll = await ProductDto.findOneAndUpdate(query, update, {
+      const coll = await ProductTypeDto.findOneAndUpdate(query, update, {
         new: true,
       });
       return coll;
@@ -89,7 +84,7 @@ class ProductRepository extends BaseRepository {
   }
   async updateMany(query = {}, update = {}) {
     try {
-      const coll = await ProductDto.updateMany(query, update, {
+      const coll = await ProductTypeDto.updateMany(query, update, {
         new: true,
       });
       return coll;
@@ -97,7 +92,7 @@ class ProductRepository extends BaseRepository {
       logger.error(err, err.message);
     }
   }
-  async updateProductById(msg) {
+  async updateProductTypeById(msg) {
     const { uid, data } = msg;
     const coll = await this.update(
       { uid: uid },
@@ -105,17 +100,17 @@ class ProductRepository extends BaseRepository {
         ...data,
       },
     );
-    const inserted = ProductModel.fromMongo(coll);
+    const inserted = ProductTypeModel.fromMongo(coll);
     return inserted;
   }
   async delete(data) {
     if (data == null) {
       return;
     }
-    const coll = await ProductDto.delete({ uid: data });
+    const coll = await ProductTypeDto.delete({ uid: data });
     return coll;
   }
-  async deleteProductById(value) {
+  async deleteProductTypeById(value) {
     const deleted = await this.delete(value);
     return deleted;
   }
@@ -124,7 +119,7 @@ class ProductRepository extends BaseRepository {
     if (value == null) {
       return;
     }
-    const coll = await ProductDto.delete({ [key]: { $in: value } });
+    const coll = await ProductTypeDto.delete({ [key]: { $in: value } });
     return coll;
   }
   async search(data) {
@@ -165,12 +160,12 @@ class ProductRepository extends BaseRepository {
         },
       },
     ];
-    const coll = await ProductDto.aggregate(pipe)
+    const coll = await ProductTypeDto.aggregate(pipe)
       .sort({ createdAt: -1 })
       .skip((data.page - 1) * data.limit)
       .limit(data.limit);
 
-    const total = await ProductDto.aggregate(pipe).count('code');
+    const total = await ProductTypeDto.aggregate(pipe).count('code');
     paging.total = total.length > 0 ? total[0].code : 0;
 
     if (coll.total === 0) {
@@ -179,4 +174,4 @@ class ProductRepository extends BaseRepository {
     return [coll, paging];
   }
 }
-module.exports = ProductRepository;
+module.exports = ProductTypeRepository;

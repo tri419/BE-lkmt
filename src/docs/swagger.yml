@@ -175,7 +175,7 @@ paths:
           name: product
           description: Data product
           schema:
-            $ref: '#/definitions/productStatus'
+            $ref: '#/definitions/Status'
       responses:
         '200':
           description: Pong
@@ -183,7 +183,144 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
-
+  /productType:
+    post:
+      x-swagger-router-controller: productType
+      operationId: create
+      description: Create new productType
+      tags:
+        - ERP-productType
+      parameters:
+        - in: body
+          name: productType
+          description: Data productType
+          schema:
+            $ref: '#/definitions/ProductType'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: productType
+      operationId: search
+      description: Search productType
+      tags:
+        - ERP-productType
+      parameters:
+        - name: code
+          type: string
+          in: query
+          required: false
+        - name: name
+          type: string
+          in: query
+          required: false
+        - name: status
+          type: string
+          in: query
+          required: false
+        - name: page
+          type: string
+          in: query
+          required: false
+        - name: limit
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /productType/{uid}:
+    put:
+      x-swagger-router-controller: productType
+      operationId: update
+      description: Update productType by Id
+      tags:
+        - ERP-productType
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: productType
+          description: Data productType
+          schema:
+            $ref: '#/definitions/ProductType'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    delete:
+      x-swagger-router-controller: productType
+      operationId: delete
+      description: Delete ProductType By Id
+      tags:
+        - ERP-productType
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: productType
+      operationId: view
+      description: View productType
+      tags:
+        - ERP-productType
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /productType/status/{uid}:
+    put:
+      x-swagger-router-controller: productType
+      operationId: status
+      description: Status productType by id
+      tags:
+        - ERP-productType
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: productType
+          description: Data productType
+          schema:
+            $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object
@@ -232,7 +369,7 @@ definitions:
         example: 01FX2F9X4V97A9Q3RCX98AR3TB
       brand:
         type: string
-        example: Asus, Acer
+        example: 01FX2F9X4V97A9Q3RCX98AR3TB
       image:
         type: array
         items:
@@ -249,8 +386,23 @@ definitions:
               type: string
             description:
               type: string
-  productStatus:
+  Status:
     type: object
     properties:
       status:
         type: boolean
+  ProductType:
+    type: object
+    properties:
+      code:
+        type: string
+        example: NSTest65444
+      name:
+        type: string
+        example: Cao Trí
+      nameUnsigned:
+        type: string
+        example: Cao Tri
+      status:
+        type: boolean
+        example: true

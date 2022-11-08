@@ -1,10 +1,8 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
+ * @typedef {import("../data/productType_repository")} productTypeRepository
  * @typedef {import("../data/product_repository")} productRepository
- * @typedef {import("../data/customer_repository")} customerRepository
- * @typedef {import("../data/order_repository")} orderRepository
- * @typedef {import("../data/user_repository")} userRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
@@ -14,78 +12,74 @@ const { Utils } = require('../libs/utils');
 
 const defaultOpts = {};
 
-class ProductService {
+class ProductTypeService {
   /**
    *
    * @param {*} opts
    * @param {PolicyService} policy
-   * @param {productRepository} repo
-   * @param {customerRepository} repoCustomer
-   * @param {orderRepository} repoOrder
-   * @param {userRepository} repoUser
+   * @param {productTypeRepository} repo
+   * @param {productRepository} repoProduct
    */
-  constructor(opts, policy, repo, repoCustomer, repoOrder, repoUser) {
+  constructor(opts, policy, repo, repoProduct) {
     /** @type {defaultOpts} */
     this.opts = defaultsDeep(opts, defaultOpts);
     this.policy = policy;
     this.repo = repo;
-    this.repoCustomer = repoCustomer;
-    this.repoOrder = repoOrder;
-    this.repoUser = repoUser;
+    this.repoProduct = repoProduct;
   }
-  async create(data) {
+  async createProductType(data) {
     data.uid = ulid();
     const output = await this.repo.createOne(data);
     return output;
   }
-  async updateProduct(msg) {
+  async updateProductType(msg) {
     const { uid, data } = msg;
-    const findProduct = await this.repo.findOne('uid', uid);
-    if (!findProduct) {
+    const findProductType = await this.repo.findOne('uid', uid);
+    if (!findProductType) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    const output = await this.repo.updateProductById(msg);
+    const output = await this.repo.updateProductTypeById(msg);
     return output;
   }
-  async viewProductById(uid) {
-    const findProduct = await this.repo.findOne('uid', uid);
-    if (!findProduct) {
+  async viewProductType(uid) {
+    const findProductType = await this.repo.findOne('uid', uid);
+    if (!findProductType) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    return findProduct;
+    return findProductType;
   }
-  async deleteProductById(uid) {
-    const findProduct = await this.repo.findOne('uid', uid);
-    if (!findProduct) {
+  async deleteProductType(uid) {
+    const findProductType = await this.repo.findOne('uid', uid);
+    if (!findProductType) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
     try {
-      await this.repo.deleteProductById(uid);
+      await this.repo.deleteProductTypeById(uid);
       return true;
     } catch (error) {
       return false;
     }
   }
-  async updateStatusProduct(msg) {
+  async updateStatusProductType(msg) {
     const { uid, data } = msg;
-    const findProduct = await this.repo.findOne('uid', uid);
-    if (!findProduct) {
+    const findProductType = await this.repo.findOne('uid', uid);
+    if (!findProductType) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    const output = await this.repo.updateProductById(msg);
+    const output = await this.repo.updateProductTypeById(msg);
     return output;
   }
-  async searchProduct(data) {
+  async searchProductType(data) {
     const output = await this.repo.search(data);
     return output;
   }
 }
-module.exports = ProductService;
+module.exports = ProductTypeService;

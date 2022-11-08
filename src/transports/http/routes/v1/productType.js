@@ -1,5 +1,5 @@
-const { ProductModel } = require('../../../../models');
-const { productService } = require('../../../../domain');
+const { ProductTypeModel } = require('../../../../models');
+const { productTypeService } = require('../../../../domain');
 const { loggerService } = require('../../../../libs/logger');
 
 /**
@@ -18,8 +18,8 @@ module.exports = {
    */
   create: async (req, res, next) => {
     try {
-      const data = ProductModel.fromRequest(req.body);
-      const output = await productService.create(data);
+      const data = ProductTypeModel.fromRequest(req.body);
+      const output = await productTypeService.createProductType(data);
       res.json({
         success: true,
         results: output,
@@ -31,8 +31,11 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const data = ProductModel.fromUpdateProduct(req.body);
-      const output = await productService.updateProduct({ uid, data });
+      const data = ProductTypeModel.fromUpdateProductType(req.body);
+      const output = await productTypeService.updateProductType({
+        uid,
+        data,
+      });
       res.json({
         success: true,
         results: output,
@@ -44,7 +47,7 @@ module.exports = {
   view: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const output = await productService.viewProductById(uid);
+      const output = await productTypeService.viewProductType(uid);
       res.json({
         success: true,
         results: output,
@@ -56,7 +59,7 @@ module.exports = {
   delete: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const output = await productService.deleteProductById(uid);
+      const output = await productTypeService.deleteProductType(uid);
       res.json({
         success: true,
         results: output,
@@ -68,8 +71,11 @@ module.exports = {
   status: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const data = ProductModel.fromUpdateStatusProduct(req.body);
-      const output = await productService.updateStatusProduct({ uid, data });
+      const data = ProductTypeModel.fromUpdateStatusProductType(req.body);
+      const output = await productTypeService.updateStatusProductType({
+        uid,
+        data,
+      });
       res.json({
         success: true,
         results: output,
@@ -80,8 +86,8 @@ module.exports = {
   },
   search: async (req, res, next) => {
     try {
-      const data = ProductModel.searchProduct(req.body);
-      const output = await productService.searchProduct(data);
+      const data = ProductTypeModel.searchProductType(req.body);
+      const output = await productTypeService.searchProduct(data);
       res.json({
         success: true,
         results: { data: output[0], paging: output[1] },
