@@ -52,6 +52,7 @@ class Product extends Base {
       output.image = input.image;
       output.descriptionSummary = input.descriptionSummary;
       output.descriptionDetail = input.descriptionDetail;
+      output.quantity = input.quantity;
       output.createdAt = input.createdAt;
       output.updatedAt = input.updatedAt;
     }
@@ -79,6 +80,7 @@ class Product extends Base {
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
       output.image = Utils.getArray(input.image, []);
+      output.quantity = Utils.getInteger(input.quantity, 0);
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
       );

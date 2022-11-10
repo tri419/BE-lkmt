@@ -74,7 +74,6 @@ const ProductSchema = new schema(
     ],
     quantity: {
       type: Number,
-      required: true,
     },
   },
   { timestamps: true },
