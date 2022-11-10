@@ -115,7 +115,6 @@ class Customer extends Base {
   static fromUpdateCustomer(input) {
     const output = {};
     if (input != null) {
-      output.code = Utils.getString(input.code, '');
       output.name = Utils.getString(input.firstName + ' ' + input.lastName, '');
       output.nameUnsigned = Utils.getString(Utils.tvkd(output.name), '');
       output.username = Utils.getString(input.username, '');

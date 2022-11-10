@@ -27,7 +27,7 @@ class ProductType extends Base {
     if (input == null || input instanceof mongoose.Types.ObjectId) {
       return null;
     }
-    const output = new Product();
+    const output = new ProductType();
     if (input != null) {
       output.uid = input.uid;
       output.code = input.code;
@@ -46,7 +46,7 @@ class ProductType extends Base {
     return Product;
   }
   static fromRequest(input) {
-    const output = new Product();
+    const output = new ProductType();
     if (input != null) {
       output.uid = Utils.getString(input.uid, '');
       output.code = Utils.getString(input.code, '');

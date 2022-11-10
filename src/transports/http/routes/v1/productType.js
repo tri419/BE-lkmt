@@ -11,7 +11,7 @@ const { loggerService } = require('../../../../libs/logger');
 module.exports = {
   /* --------------------------------- API ERP -------------------------------- */
   /**
-   * Create new product
+   * Create new productType
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -87,7 +87,7 @@ module.exports = {
   search: async (req, res, next) => {
     try {
       const data = ProductTypeModel.searchProductType(req.body);
-      const output = await productTypeService.searchProduct(data);
+      const output = await productTypeService.searchProductType(data);
       res.json({
         success: true,
         results: { data: output[0], paging: output[1] },

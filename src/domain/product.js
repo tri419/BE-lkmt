@@ -34,6 +34,7 @@ class ProductService {
     this.repoUser = repoUser;
   }
   async create(data) {
+    data.code = await this.repo.generateCode();
     data.uid = ulid();
     const output = await this.repo.createOne(data);
     return output;

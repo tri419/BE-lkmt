@@ -321,6 +321,120 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /customer:
+    post:
+      x-swagger-router-controller: customer
+      operationId: create
+      description: Create new customer
+      tags:
+        - ERP-customer
+      parameters:
+        - in: body
+          name: customer
+          description: Data customer
+          schema:
+            $ref: '#/definitions/Customer'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: customer
+      operationId: search
+      description: Search Customer
+      tags:
+        - ERP-customer
+      parameters:
+        - name: code
+          type: string
+          in: query
+          required: false
+        - name: name
+          type: string
+          in: query
+          required: false
+        - name: status
+          type: string
+          in: query
+          required: false
+        - name: page
+          type: string
+          in: query
+          required: false
+        - name: limit
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /customer/{uid}:
+    put:
+      x-swagger-router-controller: customer
+      operationId: update
+      description: Update Customer by Id
+      tags:
+        - ERP-customer
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: customer
+          description: Data productType
+          schema:
+            $ref: '#/definitions/Customer'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    delete:
+      x-swagger-router-controller: customer
+      operationId: customer
+      description: Delete Customer By Id
+      tags:
+        - ERP-customer
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: customer
+      operationId: view
+      description: View customer
+      tags:
+        - ERP-customer
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object
@@ -340,15 +454,9 @@ definitions:
   Product:
     type: object
     properties:
-      code:
-        type: string
-        example: NSTest65444
       name:
         type: string
         example: Cao Trí
-      nameUnsigned:
-        type: string
-        example: Cao Tri
       price:
         type: number
         example: 3000
@@ -386,6 +494,9 @@ definitions:
               type: string
             description:
               type: string
+      quantity:
+        type: number
+        example: 100
   Status:
     type: object
     properties:
@@ -400,9 +511,55 @@ definitions:
       name:
         type: string
         example: Cao Trí
-      nameUnsigned:
-        type: string
-        example: Cao Tri
       status:
         type: boolean
         example: true
+  Customer:
+    type: object
+    properties:
+      username:
+        type: string
+        example: caotri1242001
+      password:
+        type: string
+        example: caotri1242001
+      firstName:
+        type: string
+        example: Long
+      lastName:
+        type: string
+        example: Luong
+      dateOfBirth:
+        type: string
+        example: 2021-08-27T07:11:10.826Z
+        description: Ngay sinh
+      sex:
+        type: string
+        example: male
+      phone:
+        type: string
+        example: 0393506999
+      email:
+        type: string
+        example: caotri1242001@gmail.com
+      status:
+        type: boolean
+        example: true
+      avatar:
+        type: string
+        example: 'dsfdsaf.jpg'
+      address:
+        type: array
+        items:
+          type: object
+          properties:
+            street:
+              type: string
+            province:
+              type: string
+            district:
+              type: string
+            ward:
+              type: string
+            status:
+              type: boolean

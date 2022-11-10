@@ -1,8 +1,8 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
- * @typedef {import("../data/product_repository")} productRepository
  * @typedef {import("../data/customer_repository")} customerRepository
+ * @typedef {import("../data/product_repository")} productRepository
  * @typedef {import("../data/order_repository")} orderRepository
  */
 const { defaultsDeep } = require('lodash');
@@ -10,6 +10,7 @@ const { ulid } = require('ulid');
 const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
+const moment = require('moment');
 
 const defaultOpts = {};
 
@@ -27,12 +28,25 @@ class CustomerService {
     this.opts = defaultsDeep(opts, defaultOpts);
     this.policy = policy;
     this.repo = repo;
-    this.repoCustomer = repoProduct;
+    this.repoProduct = repoProduct;
     this.repoOrder = repoOrder;
   }
   async create(data) {
+    data.code = await this.repo.generateCode();
     data.uid = ulid();
+    data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
     const output = await this.repo.createOne(data);
+    return output;
+  }
+  async updateCustomer(msg) {
+    const { uid, data } = msg;
+    const findCustomer = await this.repo.findOne('uid', uid);
+    if (!findCustomer) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const output = await this.repo.updateCustomerById(msg);
     return output;
   }
 }
