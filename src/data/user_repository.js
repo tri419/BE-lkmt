@@ -122,5 +122,11 @@ class UserRepository extends BaseRepository {
     const coll = await UserDto.delete({ [key]: { $in: value } });
     return coll;
   }
+  async generateCode() {
+    const count = await UserDto.find();
+    const total = count.length + 1;
+    const number = ('0000' + total).slice(-4);
+    return `User${number}`;
+  }
 }
 module.exports = UserRepository;

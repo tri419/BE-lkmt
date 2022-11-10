@@ -4,7 +4,7 @@ const { defaultsDeep } = require('lodash');
 const BaseRepository = require('./base_repository');
 const ProductDto = require('./models/Products');
 
-const { CollectionModel, ProductModel } = require('../models');
+const { CollectionModel, ProductModel, BranchModel } = require('../models');
 const { logger } = require('../libs/logger');
 const { Utils } = require('../libs/utils');
 
@@ -177,6 +177,12 @@ class ProductRepository extends BaseRepository {
       return coll;
     }
     return [coll, paging];
+  }
+  async generateCode() {
+    const count = await ProductDto.find();
+    const total = count.length + 1;
+    const number = ('0000' + total).slice(-4);
+    return `SP${number}`;
   }
 }
 module.exports = ProductRepository;

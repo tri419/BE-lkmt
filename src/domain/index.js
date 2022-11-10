@@ -28,8 +28,8 @@ const productService = new ProductService(
 const customerService = new CustomerService(
   {},
   policyService,
-  productRepository,
   customerRepository,
+  productRepository,
   orderRepository,
   roleRepository,
   axios,

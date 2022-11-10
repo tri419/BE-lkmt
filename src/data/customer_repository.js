@@ -122,5 +122,11 @@ class CustomerRepository extends BaseRepository {
     const coll = await CustomerDto.delete({ [key]: { $in: value } });
     return coll;
   }
+  async generateCode() {
+    const count = await CustomerDto.find();
+    const total = count.length + 1;
+    const number = ('0000' + total).slice(-4);
+    return `KH${number}`;
+  }
 }
 module.exports = CustomerRepository;
