@@ -66,7 +66,6 @@ class Product extends Base {
   static fromRequest(input) {
     const output = new Product();
     if (input != null) {
-      output.uid = Utils.getString(input.uid, '');
       output.brand = Utils.getString(input.brand, '');
       output.code = Utils.getString(input.code, '');
       output.name = Utils.getString(input.name, '');
@@ -80,7 +79,7 @@ class Product extends Base {
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
       output.image = Utils.getArray(input.image, []);
-      output.quantity = Utils.getInteger(input.quantity, '');
+      output.quantity = Utils.getInteger(input.quantity, 0);
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
       );
