@@ -52,6 +52,7 @@ class Product extends Base {
       output.image = input.image;
       output.descriptionSummary = input.descriptionSummary;
       output.descriptionDetail = input.descriptionDetail;
+      output.quantity = input.quantity;
       output.createdAt = input.createdAt;
       output.updatedAt = input.updatedAt;
     }
@@ -79,6 +80,7 @@ class Product extends Base {
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
       output.image = Utils.getArray(input.image, []);
+      output.quantity = Utils.getInteger(input.quantity, '');
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
       );
@@ -103,6 +105,7 @@ class Product extends Base {
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
       output.image = Utils.getArray(input.image, []);
+      output.quantity = Utils.getInteger(input.quantity, '');
     }
     return output;
   }
@@ -119,6 +122,9 @@ class Product extends Base {
     output.name = !input.name
       ? null
       : Utils.tvkd(input.name.trim().replace(/\s\s+/g, ' '));
+    output.productType = !input.productType
+      ? null
+      : Utils.tvkd(input.productType.trim().replace(/\s\s+/g, ' '));
     output.status = !input.status ? null : input.status.trim();
     output.limit = input.limit || '10';
     output.limit = Number.parseInt(output.limit, 10);

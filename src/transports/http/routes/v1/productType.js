@@ -86,11 +86,22 @@ module.exports = {
   },
   search: async (req, res, next) => {
     try {
-      const data = ProductTypeModel.searchProductType(req.body);
+      const data = ProductTypeModel.searchProductType(req.query);
       const output = await productTypeService.searchProductType(data);
       res.json({
         success: true,
         results: { data: output[0], paging: output[1] },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  listProductType: async (req, res, next) => {
+    try {
+      const output = await productTypeService.listProductType();
+      res.json({
+        success: true,
+        results: output,
       });
     } catch (error) {
       next(error);

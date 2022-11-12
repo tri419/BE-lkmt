@@ -1,8 +1,7 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
- * @typedef {import("../data/productType_repository")} productTypeRepository
- * @typedef {import("../data/product_repository")} productRepository
+ * @typedef {import("../data/role_repository")} roleRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
@@ -12,61 +11,59 @@ const { Utils } = require('../libs/utils');
 
 const defaultOpts = {};
 
-class ProductTypeService {
+class RoleService {
   /**
    *
    * @param {*} opts
    * @param {PolicyService} policy
-   * @param {productTypeRepository} repo
-   * @param {productRepository} repoProduct
+   * @param {roleRepository} repo
    */
   constructor(opts, policy, repo, repoProduct) {
     /** @type {defaultOpts} */
     this.opts = defaultsDeep(opts, defaultOpts);
     this.policy = policy;
     this.repo = repo;
-    this.repoProduct = repoProduct;
   }
-  async createProductType(data) {
+  async createRole(data) {
     data.uid = ulid();
     const output = await this.repo.createOne(data);
     return output;
   }
-  async updateProductType(msg) {
+  async updateRole(msg) {
     const { uid, data } = msg;
-    const findProductType = await this.repo.findOne('uid', uid);
-    if (!findProductType) {
+    const findRole = await this.repo.findOne('uid', uid);
+    if (!findRole) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    const output = await this.repo.updateProductTypeById(msg);
+    const output = await this.repo.updateRoleById(msg);
     return output;
   }
-  async viewProductType(uid) {
-    const findProductType = await this.repo.findOne('uid', uid);
-    if (!findProductType) {
+  async viewRole(uid) {
+    const findRole = await this.repo.findOne('uid', uid);
+    if (!findRole) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    return findProductType;
+    return findRole;
   }
-  async deleteProductType(uid) {
-    const findProductType = await this.repo.findOne('uid', uid);
-    if (!findProductType) {
+  async deleteRole(uid) {
+    const findRole = await this.repo.findOne('uid', uid);
+    if (!findRole) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
     try {
-      await this.repo.deleteProductTypeById(uid);
+      await this.repo.deleteRoleById(uid);
       return true;
     } catch (error) {
       return false;
     }
   }
-  async updateStatusProductType(msg) {
+  async updateStatusRole(msg) {
     const { uid, data } = msg;
     const findProductType = await this.repo.findOne('uid', uid);
     if (!findProductType) {
@@ -74,16 +71,12 @@ class ProductTypeService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    const output = await this.repo.updateProductTypeById(msg);
+    const output = await this.repo.updateRoleById(msg);
     return output;
   }
-  async searchProductType(data) {
+  async searchRole(data) {
     const output = await this.repo.search(data);
     return output;
   }
-  async listProductType() {
-    const output = await this.repo.search();
-    return output;
-  }
 }
-module.exports = ProductTypeService;
+module.exports = RoleService;

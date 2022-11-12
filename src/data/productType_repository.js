@@ -173,5 +173,25 @@ class ProductTypeRepository extends BaseRepository {
     }
     return [coll, paging];
   }
+  async listProductType() {
+    const pipe = [
+      {
+        $match: { status: true },
+      },
+      {
+        $project: {
+          _id: 0,
+          uid: 1,
+          code: 1,
+          name: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+    const coll = await ProductTypeDto.aggregate(pipe).sort({
+      createdAt: -1,
+    });
+    return coll;
+  }
 }
 module.exports = ProductTypeRepository;
