@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
+const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const { getDefaultDB } = require('../../infrastructures/mongoose');
 const { hashText } = require('../../libs/bcrypt_helper');
+const Customer = require('../../models/customer');
 const schema = mongoose.Schema;
 
 const CustomerSchema = mongoose.Schema(
@@ -55,6 +59,9 @@ const CustomerSchema = mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    roleId: {
+      type: String,
+    },
     avatar: {
       type: String,
     },
@@ -80,10 +87,35 @@ const CustomerSchema = mongoose.Schema(
   },
   { timestamps: true },
 );
-CustomerSchema.pre('save', function (next) {
+//
+CustomerSchema.pre('save', async function (next) {
+  // Hash the password before saving the user model
   const customer = this;
-  customer.password = hashText(customer.password);
+  if (customer.isModified('password')) {
+    customer.password = await bcrypt.hash(customer.password, 8);
+  }
   next();
 });
+CustomerSchema.methods.generateAuthToken = async function () {
+  // Generate an auth token for the user
+  const customer = this;
+  const token = jwt.sign({ uid: customer.uid }, process.env.JWT_KEY);
+  customer.tokens = customer.tokens.concat({ token });
+  await customer.save();
+  return token;
+};
+
+CustomerSchema.statics.findByCredentials = async (email, password) => {
+  // Search for a user by email and password.
+  const customer = await Customer.findOne({ email });
+  if (!customer) {
+    throw new Error({ error: 'Invalid login credentials' });
+  }
+  const isPasswordMatch = await bcrypt.compare(password, customer.password);
+  if (!isPasswordMatch) {
+    throw new Error({ error: 'Invalid login credentials' });
+  }
+  return customer;
+};
 CustomerSchema.plugin(mongooseDelete, { overrideMethods: true });
 module.exports = getDefaultDB().model('Customers', CustomerSchema);

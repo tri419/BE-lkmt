@@ -11,9 +11,9 @@ const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
 const moment = require('moment');
+const Customer = require('../models/customer');
 
 const defaultOpts = {};
-
 class CustomerService {
   /**
    *
@@ -47,6 +47,44 @@ class CustomerService {
       });
     }
     const output = await this.repo.updateCustomerById(msg);
+    return output;
+  }
+  async viewCustomerById(uid) {
+    const findCustomer = await this.repo.findOne('uid', uid);
+    if (!findCustomer) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    return findCustomer;
+  }
+  async deleteCustomerById(uid) {
+    const findCustomer = await this.repo.findOne('uid', uid);
+    if (!findCustomer) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    try {
+      await this.repo.deleteCustomerById(uid);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+  async updateStatusCustomer(msg) {
+    const { uid, data } = msg;
+    const findCustomer = await this.repo.findOne('uid', uid);
+    if (!findCustomer) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const output = await this.repo.updateCustomerById(msg);
+    return output;
+  }
+  async searchCustomer(data) {
+    const output = await this.repo.search(data);
     return output;
   }
 }

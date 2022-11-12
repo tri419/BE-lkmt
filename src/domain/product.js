@@ -88,5 +88,9 @@ class ProductService {
     const output = await this.repo.search(data);
     return output;
   }
+  async listProduct() {
+    const output = await this.repo.listProduct();
+    return output;
+  }
 }
 module.exports = ProductService;

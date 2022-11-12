@@ -10,6 +10,7 @@ const {
 
 const ProductService = require('./product');
 const CustomerService = require('./customer');
+const RoleService = require('./role');
 const ProductTypeService = require('./productType');
 const PolicyService = require('./policy');
 const { redisClient, axios } = require('../infrastructures');
@@ -39,8 +40,10 @@ const productTypeService = new ProductTypeService(
   policyService,
   productTypeRepository,
 );
+const roleService = new RoleService({}, policyService, roleRepository);
 module.exports = {
   productService,
   customerService,
   productTypeService,
+  roleService,
 };

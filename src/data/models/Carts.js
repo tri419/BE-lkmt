@@ -1,10 +1,31 @@
+const { Schema } = require('mongoose');
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
 const { getDefaultDB } = require('../../infrastructures/mongoose');
+
 const schema = mongoose.Schema;
 
-const ProductTypeSchema = new schema(
+const ProductSchema = new Schema(
+  {
+    uid: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+    productId: {
+      type: String,
+      required: true,
+    },
+    number: {
+      type: Number,
+      required: true,
+    },
+  },
+  { timestamps: true },
+);
+const CartSchema = new Schema(
   {
     uid: {
       type: String,
@@ -12,28 +33,13 @@ const ProductTypeSchema = new schema(
       required: true,
       index: true,
     },
-    code: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    name: {
+    customerId: {
       type: String,
       required: true,
     },
-    nameUnsigned: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: Boolean,
-      required: true,
-    },
-    image: {
-      type: String,
-    },
+    product: [ProductSchema],
   },
   { timestamps: true },
 );
-ProductTypeSchema.plugin(mongooseDelete, { overrideMethods: true });
-module.exports = getDefaultDB().model('ProductTypes', ProductTypeSchema);
+CartSchema.plugin(mongooseDelete, { overrideMethods: true });
+module.exports = getDefaultDB().model('Carts', CartSchema);

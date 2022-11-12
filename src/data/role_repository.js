@@ -122,5 +122,56 @@ class RoleRepository extends BaseRepository {
     const coll = await RoleDto.delete({ [key]: { $in: value } });
     return coll;
   }
+  async search(data) {
+    const paging = {
+      total: 0,
+      page: data.page,
+      limit: data.limit,
+    };
+    const pipe = [
+      {
+        $addFields: {
+          status_: {
+            $toString: '$status',
+          },
+        },
+      },
+      {
+        $match: {
+          code: !data.code
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.code, $options: 'i' },
+          nameUnsigned: !data.name
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.name.toLowerCase(), $options: 'i' },
+          status_: !data.status
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.status, $options: 'i' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          uid: 1,
+          code: 1,
+          name: 1,
+          status: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+    const coll = await RoleDto.aggregate(pipe)
+      .sort({ createdAt: -1 })
+      .skip((data.page - 1) * data.limit)
+      .limit(data.limit);
+
+    const total = await RoleDto.aggregate(pipe).count('code');
+    paging.total = total.length > 0 ? total[0].code : 0;
+
+    if (coll.total === 0) {
+      return coll;
+    }
+    return [coll, paging];
+  }
 }
 module.exports = RoleRepository;
