@@ -32,6 +32,20 @@ class CustomerService {
     this.repoOrder = repoOrder;
   }
   async create(data) {
+    const coll = await this.repo.findCustomer(
+      {
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.total > 0) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Tên đăng nhập đã tồn tại.',
+      });
+    }
     data.code = await this.repo.generateCode();
     data.uid = ulid();
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
@@ -89,26 +103,22 @@ class CustomerService {
     return output;
   }
   async login(data) {
-    try {
-      const customer = await this.repo.comparePasswordLogin(data);
-      if (customer == null) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Tên đăng nhập hoặc mật khẩu không đúng.',
-        });
-      }
-      //3. Check status
-      if (customer.status === false) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message:
-            'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
-        });
-      }
-      return true;
-    } catch (error) {
-      return false;
+    const customer = await this.repo.comparePasswordLogin(data);
+    if (customer == null) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng.',
+      });
     }
+    //3. Check status
+    if (customer.status === false) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message:
+          'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
+      });
+    }
+    return customer;
   }
 }
 module.exports = CustomerService;
