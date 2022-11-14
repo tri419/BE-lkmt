@@ -40,6 +40,7 @@ class CustomerService {
   }
   async updateCustomer(msg) {
     const { uid, data } = msg;
+    data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
     const findCustomer = await this.repo.findOne('uid', uid);
     if (!findCustomer) {
       throw ErrorModel.initWithParams({

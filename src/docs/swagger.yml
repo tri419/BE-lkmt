@@ -440,6 +440,30 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /customer/status/{uid}:
+    put:
+      x-swagger-router-controller: customer
+      operationId: status
+      description: Status customer by id
+      tags:
+        - ERP-customer
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: customer
+          description: Data customer
+          schema:
+            $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /brand:
     post:
       x-swagger-router-controller: brand
@@ -547,6 +571,30 @@ paths:
           name: uid
           required: true
           type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /brand/status/{uid}:
+    put:
+      x-swagger-router-controller: brand
+      operationId: status
+      description: Status brand by id
+      tags:
+        - ERP-brand
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: brand
+          description: Data brand
+          schema:
+            $ref: '#/definitions/Status'
       responses:
         '200':
           description: Pong
@@ -939,6 +987,8 @@ definitions:
       avatar:
         type: string
         example: 'dsfdsaf.jpg'
+      roleId:
+        type: string
       address:
         type: array
         items:
