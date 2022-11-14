@@ -494,6 +494,66 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /brand/{uid}:
+    put:
+      x-swagger-router-controller: brand
+      operationId: update
+      description: Update brand by Id
+      tags:
+        - ERP-brand
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: brand
+          description: Data brand
+          schema:
+            $ref: '#/definitions/Brand'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    delete:
+      x-swagger-router-controller: brand
+      operationId: delete
+      description: Delete brand By Id
+      tags:
+        - ERP-brand
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: brand
+      operationId: view
+      description: View brand
+      tags:
+        - ERP-brand
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /role:
     post:
       x-swagger-router-controller: role
@@ -537,59 +597,6 @@ paths:
           type: string
           in: query
           required: false
-      responses:
-        '200':
-          description: Pong
-          schema:
-            type: object
-            items:
-              $ref: '#/definitions/Pong'
-  /brand/{uid}:
-    put:
-      x-swagger-router-controller: brand
-      operationId: update
-      description: Update brand by Id
-      tags:
-        - ERP-brand
-      parameters:
-        - name: uid
-          type: string
-          in: path
-          required: true
-        - in: body
-          name: brand
-          description: Data brand
-          schema:
-            $ref: '#/definitions/Brand'
-    delete:
-      x-swagger-router-controller: brand
-      operationId: delete
-      description: Delete brand By Id
-      tags:
-        - ERP-brand
-      parameters:
-        - name: uid
-          type: string
-          in: path
-          required: true
-      responses:
-        '200':
-          description: Pong
-          schema:
-            type: object
-            items:
-              $ref: '#/definitions/Pong'
-    get:
-      x-swagger-router-controller: brand
-      operationId: view
-      description: View brand
-      tags:
-        - ERP-brand
-      parameters:
-        - in: path
-          name: uid
-          required: true
-          type: string
       responses:
         '200':
           description: Pong
@@ -657,7 +664,30 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
-<<<<<<< HEAD
+  /role/status/{uid}:
+    put:
+      x-swagger-router-controller: role
+      operationId: status
+      description: Status role by id
+      tags:
+        - ERP-role
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: role
+          description: Data role
+          schema:
+            $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /user:
     post:
       x-swagger-router-controller: user
@@ -796,8 +826,6 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
-=======
->>>>>>> origin/dev
 definitions:
   Pong:
     type: object
@@ -926,7 +954,6 @@ definitions:
               type: string
             status:
               type: boolean
-<<<<<<< HEAD
   Brand:
     type: object
     properties:
@@ -956,7 +983,6 @@ definitions:
         type: string
       roleId:
         type: string
-=======
   Role:
     type: object
     properties:
@@ -966,4 +992,3 @@ definitions:
       status:
         type: boolean
         example: true
->>>>>>> origin/dev

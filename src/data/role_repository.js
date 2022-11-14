@@ -138,10 +138,7 @@ class RoleRepository extends BaseRepository {
       },
       {
         $match: {
-          code: !data.code
-            ? { $regex: '', $options: 'i' }
-            : { $regex: data.code, $options: 'i' },
-          nameUnsigned: !data.name
+          name: !data.name
             ? { $regex: '', $options: 'i' }
             : { $regex: data.name.toLowerCase(), $options: 'i' },
           status_: !data.status
@@ -153,7 +150,6 @@ class RoleRepository extends BaseRepository {
         $project: {
           _id: 0,
           uid: 1,
-          code: 1,
           name: 1,
           status: 1,
           createdAt: 1,

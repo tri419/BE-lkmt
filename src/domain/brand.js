@@ -95,9 +95,9 @@ class BrandService {
     const output = await this.repo.updateBrandById(msg);
     return output;
   }
-  // async searchBrand(data) {
-  //   const output = await this.repo.search(data);
-  //   return output;
-  // }
+  async searchBrand(data) {
+    const output = await this.repo.search(data);
+    return output;
+  }
 }
 module.exports = BrandService;

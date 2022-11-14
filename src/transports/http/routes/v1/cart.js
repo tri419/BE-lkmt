@@ -19,8 +19,8 @@ module.exports = {
   create: async (req, res, next) => {
     try {
       const userId = req.headers.userId || req.headers.userid;
-      const data = RoleModel.fromRequest(req.body, userId);
-      const output = await roleService.create(data);
+      const data = CartModel.fromRequest(req.body, userId);
+      const output = await cartService.create(data);
       res.json({
         success: true,
         results: output,
