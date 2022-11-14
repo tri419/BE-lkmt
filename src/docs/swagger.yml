@@ -53,6 +53,10 @@ paths:
           type: string
           in: query
           required: false
+        - name: productType
+          type: string
+          in: query
+          required: false
         - name: status
           type: string
           in: query
@@ -149,6 +153,20 @@ paths:
           description: Data product
           schema:
             $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /product/listProduct:
+    get:
+      x-swagger-router-controller: product
+      operationId: listProduct
+      description: list Product
+      tags:
+        - ERP-product
       responses:
         '200':
           description: Pong
@@ -287,6 +305,20 @@ paths:
           description: Data productType
           schema:
             $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /productType/listProductType:
+    get:
+      x-swagger-router-controller: productType
+      operationId: listProductType
+      description: list Product
+      tags:
+        - ERP-productType
       responses:
         '200':
           description: Pong
@@ -462,6 +494,56 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /role:
+    post:
+      x-swagger-router-controller: role
+      operationId: create
+      description: Create new role
+      tags:
+        - ERP-role
+      parameters:
+        - in: body
+          name: role
+          description: Data role
+          schema:
+            $ref: '#/definitions/Role'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: role
+      operationId: search
+      description: Search Role
+      tags:
+        - ERP-role
+      parameters:
+        - name: name
+          type: string
+          in: query
+          required: false
+        - name: status
+          type: string
+          in: query
+          required: false
+        - name: page
+          type: string
+          in: query
+          required: false
+        - name: limit
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /brand/{uid}:
     put:
       x-swagger-router-controller: brand
@@ -479,13 +561,6 @@ paths:
           description: Data brand
           schema:
             $ref: '#/definitions/Brand'
-      responses:
-        '200':
-          description: Pong
-          schema:
-            type: object
-            items:
-              $ref: '#/definitions/Pong'
     delete:
       x-swagger-router-controller: brand
       operationId: delete
@@ -522,6 +597,67 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /role/{uid}:
+    put:
+      x-swagger-router-controller: role
+      operationId: update
+      description: Update role by Id
+      tags:
+        - ERP-role
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: role
+          description: Data role
+          schema:
+            $ref: '#/definitions/Role'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    delete:
+      x-swagger-router-controller: role
+      operationId: delete
+      description: Delete Role By Id
+      tags:
+        - ERP-role
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: role
+      operationId: view
+      description: View role
+      tags:
+        - ERP-role
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+<<<<<<< HEAD
   /user:
     post:
       x-swagger-router-controller: user
@@ -660,6 +796,8 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+=======
+>>>>>>> origin/dev
 definitions:
   Pong:
     type: object
@@ -788,6 +926,7 @@ definitions:
               type: string
             status:
               type: boolean
+<<<<<<< HEAD
   Brand:
     type: object
     properties:
@@ -817,3 +956,14 @@ definitions:
         type: string
       roleId:
         type: string
+=======
+  Role:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Cao Trí
+      status:
+        type: boolean
+        example: true
+>>>>>>> origin/dev

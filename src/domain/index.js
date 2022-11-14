@@ -11,6 +11,7 @@ const {
 
 const ProductService = require('./product');
 const CustomerService = require('./customer');
+const RoleService = require('./role');
 const ProductTypeService = require('./productType');
 const BrandService = require('./brand');
 const PolicyService = require('./policy');
@@ -59,10 +60,12 @@ const userService = new UserService(
   orderRepository,
   userRepository,
 );
+const roleService = new RoleService({}, policyService, roleRepository);
 module.exports = {
   productService,
   customerService,
   productTypeService,
   brandService,
   userService,
+  roleService,
 };

@@ -4,7 +4,7 @@ const { defaultsDeep } = require('lodash');
 const BaseRepository = require('./base_repository');
 const ProductDto = require('./models/Products');
 
-const { CollectionModel, ProductModel, BranchModel } = require('../models');
+const { CollectionModel, ProductModel, BrandModel } = require('../models');
 const { logger } = require('../libs/logger');
 const { Utils } = require('../libs/utils');
 
@@ -142,6 +142,17 @@ class ProductRepository extends BaseRepository {
         },
       },
       {
+        $lookup: {
+          from: 'producttypes',
+          localField: 'productType',
+          foreignField: 'uid',
+          as: 'productType',
+        },
+      },
+      {
+        $unwind: '$productType',
+      },
+      {
         $match: {
           code: !data.code
             ? { $regex: '', $options: 'i' }
@@ -149,6 +160,9 @@ class ProductRepository extends BaseRepository {
           nameUnsigned: !data.name
             ? { $regex: '', $options: 'i' }
             : { $regex: data.name.toLowerCase(), $options: 'i' },
+          'productType.nameUnsigned': !data.productType
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.productType.toLowerCase(), $options: 'i' },
           status_: !data.status
             ? { $regex: '', $options: 'i' }
             : { $regex: data.status, $options: 'i' },
@@ -160,6 +174,14 @@ class ProductRepository extends BaseRepository {
           uid: 1,
           code: 1,
           name: 1,
+          price: 1,
+          discount: 1,
+          discountPrice: 1,
+          expiryDate: 1,
+          image: 1,
+          quantity: 1,
+          productType: '$productType.name',
+          brand: 1,
           status: 1,
           createdAt: 1,
         },
@@ -183,6 +205,32 @@ class ProductRepository extends BaseRepository {
     const total = count.length + 1;
     const number = ('0000' + total).slice(-4);
     return `SP${number}`;
+  }
+  async listProduct() {
+    const pipe = [
+      {
+        $match: { status: true },
+      },
+      {
+        $project: {
+          _id: 0,
+          uid: 1,
+          code: 1,
+          name: 1,
+          price: 1,
+          discount: 1,
+          discountPrice: 1,
+          expiryDate: 1,
+          image: 1,
+          quantity: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+    const coll = await ProductDto.aggregate(pipe).sort({
+      createdAt: -1,
+    });
+    return coll;
   }
 }
 module.exports = ProductRepository;

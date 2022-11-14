@@ -66,7 +66,6 @@ class Product extends Base {
   static fromRequest(input) {
     const output = new Product();
     if (input != null) {
-      output.uid = Utils.getString(input.uid, '');
       output.brand = Utils.getString(input.brand, '');
       output.code = Utils.getString(input.code, '');
       output.name = Utils.getString(input.name, '');
@@ -105,6 +104,7 @@ class Product extends Base {
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
       output.image = Utils.getArray(input.image, []);
+      output.quantity = Utils.getInteger(input.quantity, '');
     }
     return output;
   }
@@ -121,6 +121,9 @@ class Product extends Base {
     output.name = !input.name
       ? null
       : Utils.tvkd(input.name.trim().replace(/\s\s+/g, ' '));
+    output.productType = !input.productType
+      ? null
+      : Utils.tvkd(input.productType.trim().replace(/\s\s+/g, ' '));
     output.status = !input.status ? null : input.status.trim();
     output.limit = input.limit || '10';
     output.limit = Number.parseInt(output.limit, 10);

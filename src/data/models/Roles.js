@@ -13,13 +13,12 @@ const RoleSchema = new schema(
       required: true,
       index: true,
     },
-    code: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     name: {
       type: String,
+      required: true,
+    },
+    status: {
+      type: Boolean,
       required: true,
     },
   },

@@ -1,5 +1,5 @@
-const { ProductModel } = require('../../../../models');
-const { productService } = require('../../../../domain');
+const { RoleModel } = require('../../../../models');
+const { roleService } = require('../../../../domain');
 const { loggerService } = require('../../../../libs/logger');
 
 /**
@@ -7,18 +7,19 @@ const { loggerService } = require('../../../../libs/logger');
  * @typedef {import("express").Response} Response
  * @typedef {import("express").NextFunction} NextFunction
  */
+
 module.exports = {
   /* --------------------------------- API ERP -------------------------------- */
   /**
-   * Create new product
+   * Create new productType
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
    */
   create: async (req, res, next) => {
     try {
-      const data = ProductModel.fromRequest(req.body);
-      const output = await productService.create(data);
+      const data = RoleModel.fromRequest(req.body);
+      const output = await roleService.createRole(data);
       res.json({
         success: true,
         results: output,
@@ -30,8 +31,11 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const data = ProductModel.fromUpdateProduct(req.body);
-      const output = await productService.updateProduct({ uid, data });
+      const data = RoleModel.fromUpdateRole(req.body);
+      const output = await roleService.updateRole({
+        uid,
+        data,
+      });
       res.json({
         success: true,
         results: output,
@@ -43,7 +47,7 @@ module.exports = {
   view: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const output = await productService.viewProductById(uid);
+      const output = await roleService.viewRole(uid);
       res.json({
         success: true,
         results: output,
@@ -55,7 +59,7 @@ module.exports = {
   delete: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const output = await productService.deleteProductById(uid);
+      const output = await roleService.deleteRole(uid);
       res.json({
         success: true,
         results: output,
@@ -67,8 +71,11 @@ module.exports = {
   status: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
-      const data = ProductModel.fromUpdateStatusProduct(req.body);
-      const output = await productService.updateStatusProduct({ uid, data });
+      const data = RoleModel.fromUpdateStatusRole(req.body);
+      const output = await roleService.updateStatusRole({
+        uid,
+        data,
+      });
       res.json({
         success: true,
         results: output,
@@ -79,22 +86,11 @@ module.exports = {
   },
   search: async (req, res, next) => {
     try {
-      const data = ProductModel.searchProduct(req.query);
-      const output = await productService.searchProduct(data);
+      const data = RoleModel.searchRole(req.query);
+      const output = await roleService.searchRole(data);
       res.json({
         success: true,
         results: { data: output[0], paging: output[1] },
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
-  listProduct: async (req, res, next) => {
-    try {
-      const output = await productService.listProduct();
-      res.json({
-        success: true,
-        results: output,
       });
     } catch (error) {
       next(error);
