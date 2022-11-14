@@ -175,5 +175,17 @@ class Customer extends Base {
     }
     return output;
   }
+  static login(input) {
+    const output = {};
+    if (input != null) {
+      output.username = Utils.getString(input.username, '');
+      output.password = Utils.getString(input.password, '');
+      output.includedFields = Utils.extractIncludeAttributes(
+        input.includedFields,
+      );
+    }
+    output.username = output.username.trim().replace(/\s+/g, '');
+    return output;
+  }
 }
 module.exports = Customer;

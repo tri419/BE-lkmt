@@ -464,6 +464,26 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /customer/login:
+    post:
+      x-swagger-router-controller: customer
+      operationId: login
+      description: login customer
+      tags:
+        - ERP-customer
+      parameters:
+        - in: body
+          name: customer
+          description: Data customer
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /brand:
     post:
       x-swagger-router-controller: brand
@@ -1042,3 +1062,12 @@ definitions:
       status:
         type: boolean
         example: true
+  Login:
+    type: object
+    properties:
+      username:
+        type: string
+        example: Cao Trí
+      password:
+        type: string
+        example: 121212

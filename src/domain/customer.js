@@ -88,5 +88,27 @@ class CustomerService {
     const output = await this.repo.search(data);
     return output;
   }
+  async login(data) {
+    try {
+      const customer = await this.repo.comparePasswordLogin(data);
+      if (customer == null) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Tên đăng nhập hoặc mật khẩu không đúng.',
+        });
+      }
+      //3. Check status
+      if (customer.status === false) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message:
+            'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
+        });
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 module.exports = CustomerService;

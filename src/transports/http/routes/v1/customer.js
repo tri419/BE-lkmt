@@ -90,4 +90,16 @@ module.exports = {
       next(error);
     }
   },
+  login: async (req, res, next) => {
+    try {
+      const data = CustomerModel.login(req.body);
+      const output = await customerService.login(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
