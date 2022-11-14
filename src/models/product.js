@@ -71,10 +71,10 @@ class Product extends Base {
       output.name = Utils.getString(input.name, '');
       output.productType = Utils.getString(input.productType, '');
       output.nameUnsigned = Utils.getString(Utils.tvkd(input.name), '');
-      output.price = Utils.getInteger(input.price, '');
+      output.price = Utils.getInteger(input.price, 0);
       output.status = Utils.getBoolean(input.status, true);
-      output.discount = Utils.getInteger(input.discount, '');
-      output.discountPrice = Utils.getInteger(input.discountPrice, '');
+      output.discount = Utils.getInteger(input.discount, 0);
+      output.discountPrice = Utils.getInteger(input.discountPrice, 0);
       output.expiryDate = Utils.getInteger(input.expiryDate, 0);
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
