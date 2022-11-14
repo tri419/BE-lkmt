@@ -12,7 +12,7 @@ const { ulid } = require('ulid');
 const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
-
+const defaultOpts = {};
 class CartService {
   /**
    *
@@ -48,3 +48,4 @@ class CartService {
     return output;
   }
 }
+module.exports = CartService;

@@ -29,6 +29,9 @@ const BrandSchema = new schema(
       type: Boolean,
       required: true,
     },
+    image: {
+      type: String,
+    },
   },
   { timestamps: true },
 );
