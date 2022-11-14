@@ -154,7 +154,7 @@ class Customer extends Base {
     }
     return output;
   }
-  static searchProduct(input) {
+  static searchCustomer(input) {
     const output = {};
     output.code = !input.code ? null : input.code.trim();
     output.name = !input.name

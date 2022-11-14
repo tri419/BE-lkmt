@@ -113,5 +113,22 @@ class User extends Base {
     }
     return output;
   }
+  static searchUser(input) {
+    const output = {};
+    output.code = !input.code ? null : input.code.trim();
+    output.name = !input.name
+      ? null
+      : Utils.tvkd(input.name.trim().replace(/\s\s+/g, ' '));
+    output.status = !input.status ? null : input.status.trim();
+    output.limit = input.limit || '10';
+    output.limit = Number.parseInt(output.limit, 10);
+    output.page = input.page || '1';
+    output.page = Number.parseInt(output.page, 10);
+    if (Number.isNaN(output.page) || Number.isNaN(output.limit)) {
+      output.limit = 100;
+      output.page = 1;
+    }
+    return output;
+  }
 }
 module.exports = User;

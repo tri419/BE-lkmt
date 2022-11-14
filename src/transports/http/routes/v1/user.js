@@ -78,16 +78,16 @@ module.exports = {
       next(error);
     }
   },
-  // search: async (req, res, next) => {
-  //   try {
-  //     const data = ProductModel.searchProduct(req.body);
-  //     const output = await productService.searchProduct(data);
-  //     res.json({
-  //       success: true,
-  //       results: { data: output[0], paging: output[1] },
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // },
+  search: async (req, res, next) => {
+    try {
+      const data = UserModel.searchUser(req.body);
+      const output = await userService.searchUser(data);
+      res.json({
+        success: true,
+        results: { data: output[0], paging: output[1] },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
