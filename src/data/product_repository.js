@@ -150,7 +150,18 @@ class ProductRepository extends BaseRepository {
         },
       },
       {
+        $lookup: {
+          from: 'brands',
+          localField: 'brand',
+          foreignField: 'uid',
+          as: 'brand',
+        },
+      },
+      {
         $unwind: '$productType',
+      },
+      {
+        $unwind: '$brand',
       },
       {
         $match: {
@@ -181,7 +192,7 @@ class ProductRepository extends BaseRepository {
           image: 1,
           quantity: 1,
           productType: '$productType.name',
-          brand: 1,
+          brand: '$brand.name',
           status: 1,
           createdAt: 1,
         },

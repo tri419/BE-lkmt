@@ -128,5 +128,51 @@ class CustomerRepository extends BaseRepository {
     const number = ('0000' + total).slice(-4);
     return `KH${number}`;
   }
+  async search(data) {
+    const paging = {
+      total: 0,
+      page: data.page,
+      limit: data.limit,
+    };
+    const pipe = [
+      {
+        $addFields: {
+          status_: {
+            $toString: '$status',
+          },
+        },
+      },
+      {
+        $match: {
+          code: !data.code
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.code, $options: 'i' },
+          nameUnsigned: !data.name
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.name.toLowerCase(), $options: 'i' },
+          status_: !data.status
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.status, $options: 'i' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const coll = await CustomerDto.aggregate(pipe)
+      .sort({ createdAt: -1 })
+      .skip((data.page - 1) * data.limit)
+      .limit(data.limit);
+
+    const total = await CustomerDto.aggregate(pipe).count('code');
+    paging.total = total.length > 0 ? total[0].code : 0;
+
+    if (coll.total === 0) {
+      return coll;
+    }
+    return [coll, paging];
+  }
 }
 module.exports = CustomerRepository;
