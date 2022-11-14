@@ -174,5 +174,30 @@ class UserRepository extends BaseRepository {
     }
     return [coll, paging];
   }
+  async comparePasswordLogin(data) {
+    const coll = await this.findUser(
+      {
+        // $or: [
+        //   { clientCode: { $regex: `^${username}$`, $options: 'i' } },
+        //   { email: { $regex: `^${username}$`, $options: 'i' } },
+        // ],
+        // ...role,
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.total === 0) {
+      return null;
+    }
+    const user = coll.data[0];
+    const passwordFind = user.password;
+    if (!compareTwoText(data.password, passwordFind)) {
+      return null;
+    }
+    user.password = undefined;
+    return user;
+  }
 }
 module.exports = UserRepository;

@@ -54,6 +54,20 @@ class CustomerService {
   }
   async updateCustomer(msg) {
     const { uid, data } = msg;
+    const coll = await this.repo.findCustomer(
+      {
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.total > 0) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Tên đăng nhập đã tồn tại.',
+      });
+    }
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
     const findCustomer = await this.repo.findOne('uid', uid);
     if (!findCustomer) {

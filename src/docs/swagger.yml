@@ -894,6 +894,26 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /user/login:
+    post:
+      x-swagger-router-controller: user
+      operationId: login
+      description: login user
+      tags:
+        - ERP-user
+      parameters:
+        - in: body
+          name: user
+          description: Data user
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object
