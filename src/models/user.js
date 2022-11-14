@@ -71,7 +71,7 @@ class User extends Base {
       output.username = Utils.getString(input.username, '');
       output.password = Utils.getString(input.password, '');
       output.email = Utils.getString(input.email, '');
-      output.phone = Utils.getInteger(input.phone, '');
+      output.phone = Utils.getString(input.phone, '');
       output.roleId = Utils.getString(input.roleId, '');
       output.status = Utils.getBoolean(input.status, false);
       output.avatar = Utils.getString(input.avatar, '');
@@ -82,6 +82,21 @@ class User extends Base {
     output.email = output.email.toLowerCase();
     output.name = output.name.trim().replace(/\s\s+/g, ' ');
     output.nameUnsigned = output.nameUnsigned.trim().replace(/\s\s+/g, ' ');
+    return output;
+  }
+  static fromUpdateUser(input) {
+    const output = {};
+    if (input != null) {
+      output.name = Utils.getString(input.name, '');
+      output.nameUnsigned = Utils.getString(Utils.tvkd(input.name), '');
+      output.username = Utils.getString(input.username, '');
+      output.password = Utils.getString(input.password, '');
+      output.email = Utils.getString(input.email, '');
+      output.phone = Utils.getInteger(input.phone, '');
+      output.roleId = Utils.getString(input.roleId, '');
+      output.status = Utils.getBoolean(input.status, false);
+      output.avatar = Utils.getString(input.avatar, '');
+    }
     return output;
   }
   static updatePassword(input) {

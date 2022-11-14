@@ -8,6 +8,8 @@ const { CollectionModel, BrandModel } = require('../models');
 const { logger } = require('../libs/logger');
 const { Utils } = require('../libs/utils');
 
+const defaultOpts = {};
+
 class BrandRepository extends BaseRepository {
   /**
    *
@@ -110,5 +112,7 @@ class BrandRepository extends BaseRepository {
     const coll = await BrandDto.delete({ [key]: { $in: value } });
     return coll;
   }
+  ////
+  async search() {}
 }
 module.exports = BrandRepository;
