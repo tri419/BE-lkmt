@@ -5,6 +5,7 @@ const BaseRepository = require('./base_repository');
 const CustomerDto = require('./models/Customers');
 
 const { CollectionModel, CustomerModel } = require('../models');
+const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
 const { logger } = require('../libs/logger');
 const { Utils } = require('../libs/utils');
 
@@ -173,6 +174,31 @@ class CustomerRepository extends BaseRepository {
       return coll;
     }
     return [coll, paging];
+  }
+  async comparePasswordLogin(data) {
+    const coll = await this.findCustomer(
+      {
+        // $or: [
+        //   { clientCode: { $regex: `^${username}$`, $options: 'i' } },
+        //   { email: { $regex: `^${username}$`, $options: 'i' } },
+        // ],
+        // ...role,
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.total === 0) {
+      return null;
+    }
+    const customer = coll.data[0];
+    const passwordFind = customer.password;
+    if (!compareTwoText(data.password, passwordFind)) {
+      return null;
+    }
+    customer.password = undefined;
+    return customer;
   }
 }
 module.exports = CustomerRepository;

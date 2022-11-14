@@ -29,6 +29,7 @@ const productService = new ProductService(
   orderRepository,
   userRepository,
   productTypeRepository,
+  brandRepository,
   axios,
 );
 const customerService = new CustomerService(

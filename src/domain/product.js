@@ -5,6 +5,8 @@
  * @typedef {import("../data/customer_repository")} customerRepository
  * @typedef {import("../data/order_repository")} orderRepository
  * @typedef {import("../data/user_repository")} userRepository
+ * @typedef {import("../data/productType_repository")} productTypeRepository
+ * @typedef {import("../data/brand_repository")} brandRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
@@ -23,8 +25,19 @@ class ProductService {
    * @param {customerRepository} repoCustomer
    * @param {orderRepository} repoOrder
    * @param {userRepository} repoUser
+   * @param {productTypeRepository} repoProductType
+   * @param {brandRepository} repoBrand
    */
-  constructor(opts, policy, repo, repoCustomer, repoOrder, repoUser) {
+  constructor(
+    opts,
+    policy,
+    repo,
+    repoCustomer,
+    repoOrder,
+    repoUser,
+    repoProductType,
+    repoBrand,
+  ) {
     /** @type {defaultOpts} */
     this.opts = defaultsDeep(opts, defaultOpts);
     this.policy = policy;
@@ -32,6 +45,8 @@ class ProductService {
     this.repoCustomer = repoCustomer;
     this.repoOrder = repoOrder;
     this.repoUser = repoUser;
+    this.repoProductType = repoProductType;
+    this.repoBrand = repoBrand;
   }
   async create(data) {
     data.code = await this.repo.generateCode();
@@ -57,7 +72,27 @@ class ProductService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
-    return findProduct;
+    const findProductType = await this.repoProductType.findOne(
+      'uid',
+      findProduct.productType,
+    );
+    const findBrand = await this.repoBrand.findOne('uid', findProduct.brand);
+    const output = {
+      code: findProduct.code,
+      name: findProduct.name,
+      price: findProduct.price,
+      status: findProduct.status,
+      discount: findProduct.discount,
+      discountPrice: findProduct.discountPrice,
+      expiryDate: findProduct.expiryDate,
+      productType: findProductType.name,
+      brand: findBrand.name,
+      image: findProduct.image,
+      descriptionSummary: findProduct.descriptionSummary,
+      descriptionDetail: findProduct.descriptionDetail,
+      quantity: findProduct.quantity,
+    };
+    return output;
   }
   async deleteProductById(uid) {
     const findProduct = await this.repo.findOne('uid', uid);
