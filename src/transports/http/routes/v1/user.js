@@ -90,4 +90,16 @@ module.exports = {
       next(error);
     }
   },
+  login: async (req, res, next) => {
+    try {
+      const data = UserModel.login(req.body);
+      const output = await userService.login(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

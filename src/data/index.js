@@ -6,6 +6,7 @@ const productTypeModel = require('./models/ProductTypes');
 const brandModel = require('./models/Brands');
 const roleModel = require('./models/Roles');
 const cartModel = require('./models/Carts');
+const orderModel = require('./models/Orders');
 
 const ProductRepository = require('./product_repository');
 const CustomerRepository = require('./customer_repository');
@@ -14,6 +15,7 @@ const ProductTypeRepository = require('./productType_repository');
 const RoleRepository = require('./role_repository');
 const BrandRepository = require('./brand_repository');
 const CartRepository = require('./cart_repository');
+const OrderRepository = require('./order_repository');
 module.exports = {
   productRepository: new ProductRepository({}),
   customerRepository: new CustomerRepository({}),
@@ -22,6 +24,7 @@ module.exports = {
   roleRepository: new RoleRepository({}),
   brandRepository: new BrandRepository({}),
   cartRepository: new CartRepository({}),
+  orderRepository: new OrderRepository({}),
 
   productModel: productModel,
   roleModel: roleModel,
@@ -31,4 +34,5 @@ module.exports = {
   brandModel: brandModel,
   roleModel: roleModel,
   cartModel: cartModel,
+  orderModel: orderModel,
 };

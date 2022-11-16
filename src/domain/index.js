@@ -2,12 +2,12 @@
 const {
   productRepository,
   customerRepository,
-  orderRepository,
   userRepository,
   roleRepository,
   productTypeRepository,
   brandRepository,
   cartRepository,
+  orderRepository,
 } = require('../data');
 
 const ProductService = require('./product');
@@ -18,6 +18,7 @@ const BrandService = require('./brand');
 const PolicyService = require('./policy');
 const UserService = require('./user');
 const CartService = require('./cart');
+const OrderService = require('./order');
 const { redisClient, axios } = require('../infrastructures');
 
 const policyService = new PolicyService({}, redisClient);
@@ -64,7 +65,21 @@ const userService = new UserService(
   userRepository,
 );
 const roleService = new RoleService({}, policyService, roleRepository);
-const cartService = new CartService({}, policyService, cartRepository);
+const cartService = new CartService(
+  {},
+  policyService,
+  cartRepository,
+  customerRepository,
+  productRepository,
+);
+const orderService = new OrderService(
+  {},
+  policyService,
+  orderRepository,
+  cartRepository,
+  customerRepository,
+  productRepository,
+);
 module.exports = {
   productService,
   customerService,
@@ -73,4 +88,5 @@ module.exports = {
   userService,
   roleService,
   cartService,
+  orderService,
 };

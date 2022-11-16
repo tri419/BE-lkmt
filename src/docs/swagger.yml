@@ -894,6 +894,70 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /user/login:
+    post:
+      x-swagger-router-controller: user
+      operationId: login
+      description: login user
+      tags:
+        - ERP-user
+      parameters:
+        - in: body
+          name: user
+          description: Data user
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /cart:
+    post:
+      x-swagger-router-controller: cart
+      operationId: create
+      description: Create new cart
+      tags:
+        - ERP-cart
+      parameters:
+        - in: body
+          name: cart
+          description: Data Cart
+          schema:
+            $ref: '#/definitions/Cart'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /cart/{uid}:
+    put:
+      x-swagger-router-controller: cart
+      operationId: update
+      description: update cart
+      tags:
+        - ERP-cart
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: cart
+          description: Data Cart
+          schema:
+            $ref: '#/definitions/UpdateCart'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object
@@ -1007,8 +1071,6 @@ definitions:
       avatar:
         type: string
         example: 'dsfdsaf.jpg'
-      roleId:
-        type: string
       address:
         type: array
         items:
@@ -1071,3 +1133,22 @@ definitions:
       password:
         type: string
         example: 121212
+  Cart:
+    type: object
+    properties:
+      product:
+        type: array
+        items:
+          type: object
+          properties:
+            productId:
+              type: string
+            number:
+              type: number
+  UpdateCart:
+    type: object
+    properties:
+      productId:
+        type: string
+      name:
+        type: number

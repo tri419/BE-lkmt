@@ -18,9 +18,23 @@ module.exports = {
    */
   create: async (req, res, next) => {
     try {
-      const userId = req.headers.userId || req.headers.userid;
-      const data = CartModel.fromRequest(req.body, userId);
+      const customerId = req.headers.customerId || req.headers.customerid;
+      const data = CartModel.fromRequest(req.body, customerId);
       const output = await cartService.create(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  update: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      //const customerId = req.headers.customerId || req.headers.customerid;
+      const data = CartModel.fromUpdate(req.body);
+      const output = await cartService.update({ uid, data });
       res.json({
         success: true,
         results: output,
