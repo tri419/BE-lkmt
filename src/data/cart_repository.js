@@ -77,55 +77,55 @@ class CartRepository extends BaseRepository {
   //     return coll;
   //   }
 
-  //   async update(query = {}, update = {}) {
-  //     try {
-  //       const coll = await CartDto.findOneAndUpdate(query, update, {
-  //         new: true,
-  //       });
-  //       return coll;
-  //     } catch (err) {
-  //       logger.error(err, err.message);
-  //     }
-  //   }
-  //   async updateMany(query = {}, update = {}) {
-  //     try {
-  //       const coll = await CartDto.updateMany(query, update, {
-  //         new: true,
-  //       });
-  //       return coll;
-  //     } catch (err) {
-  //       logger.error(err, err.message);
-  //     }
-  //   }
-  //   async updateCartById(msg) {
-  //     const { uid, data } = msg;
-  //     const coll = await this.update(
-  //       { uid: uid },
-  //       {
-  //         ...data,
-  //       },
-  //     );
-  //     const inserted = CartModel.fromMongo(coll);
-  //     return inserted;
-  //   }
-  //   async delete(data) {
-  //     if (data == null) {
-  //       return;
-  //     }
-  //     const coll = await CartDto.delete({ uid: data });
+  async update(query = {}, update = {}) {
+    try {
+      const coll = await CartDto.findOneAndUpdate(query, update, {
+        new: true,
+      });
+      return coll;
+    } catch (err) {
+      logger.error(err, err.message);
+    }
+  }
+  // async updateMany(query = {}, update = {}) {
+  //   try {
+  //     const coll = await CartDto.updateMany(query, update, {
+  //       new: true,
+  //     });
   //     return coll;
+  //   } catch (err) {
+  //     logger.error(err, err.message);
   //   }
-  //   async deleteCartById(value) {
-  //     const deleted = await this.delete(value);
-  //     return deleted;
-  //   }
-  //   async deleteMany(key, value) {
-  //     // value type array
-  //     if (value == null) {
-  //       return;
-  //     }
-  //     const coll = await CartDto.delete({ [key]: { $in: value } });
-  //     return coll;
-  //   }
+  // }
+  async updateCartById(msg) {
+    const { uid, data } = msg;
+    const coll = await this.update(
+      { uid: uid },
+      {
+        ...data,
+      },
+    );
+    const inserted = CartModel.fromMongo(coll);
+    return inserted;
+  }
+  async delete(data) {
+    if (data == null) {
+      return;
+    }
+    const coll = await CartDto.delete({ uid: data });
+    return coll;
+  }
+  async deleteCartById(value) {
+    const deleted = await this.delete(value);
+    return deleted;
+  }
+  async deleteMany(key, value) {
+    // value type array
+    if (value == null) {
+      return;
+    }
+    const coll = await CartDto.delete({ [key]: { $in: value } });
+    return coll;
+  }
 }
 module.exports = CartRepository;

@@ -8,12 +8,6 @@ const schema = mongoose.Schema;
 
 const ProductSchema = new Schema(
   {
-    uid: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true,
-    },
     productId: {
       type: String,
       required: true,

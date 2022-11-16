@@ -34,8 +34,7 @@ class Cart extends Base {
       output.customerId = input.customerId;
       output.product = input.product.map((item) => {
         return {
-          uid: item.uid,
-          productId: item.uid,
+          productId: item.productId,
           number: item.number,
         };
       });
@@ -54,30 +53,24 @@ class Cart extends Base {
     const { includedFields, ...Cart } = input;
     return Cart;
   }
-  static fromRequest(input, userId) {
+  static fromRequest(input, customerId) {
     const output = new Cart();
     if (input != null) {
-      output.customerId = Utils.getString(userId, '');
-      output.product = [];
+      output.uid = Utils.getString(input.uid, '');
+      output.customerId = Utils.getString(customerId, '');
+      output.product = Utils.getArray(input.product, []);
     }
-    input.product.map((item) => {
-      const index = output.product.findIndex(
-        (s) => item.productId === s.productId,
-      );
-      if (index === -1) {
-        const value = {
-          uid: ulid(),
-          productId: item.productId,
-          number: item.number,
-        };
-        output.product.push(value);
-      } else {
-        output.product[index].number += item.number;
-      }
-    });
     output.includedFields = Utils.extractIncludeAttributes(
       input.includedFields,
     );
+    return output;
+  }
+  static fromUpdate(input) {
+    const output = {};
+    if (input != null) {
+      output.productId = Utils.getString(input.productId, '');
+      output.number = Utils.getInteger(input.number, 0);
+    }
     return output;
   }
 }

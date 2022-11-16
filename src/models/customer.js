@@ -66,7 +66,6 @@ class Customer extends Base {
       output.email = input.email;
       output.status = input.status;
       output.avatar = input.avatar;
-      output.roleId = input.roleId;
       output.address = input.address;
       output.createdAt = input.createdAt;
       output.updatedAt = input.updatedAt;
@@ -95,7 +94,6 @@ class Customer extends Base {
       output.email = Utils.getString(input.email, '');
       output.status = Utils.getBoolean(input.status, false);
       output.avatar = Utils.getString(input.avatar, '');
-      output.roleId = Utils.getString(input.roleId, '');
       output.address = [
         {
           street: Utils.getString(input.street, ''),

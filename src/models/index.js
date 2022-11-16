@@ -8,4 +8,5 @@ module.exports = {
   CustomerModel: require('./customer'),
   RoleModel: require('./role'),
   CartModel: require('./cart'),
+  OrderModel: require('./order'),
 };
