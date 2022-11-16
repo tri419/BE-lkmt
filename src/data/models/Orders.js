@@ -57,10 +57,6 @@ const OrderSchema = new schema({
     required: false,
     default: 0,
   },
-  orderCode: {
-    type: String,
-    required: true,
-  },
   typePayment: {
     //COD, BANK, ONLINE
     type: String,

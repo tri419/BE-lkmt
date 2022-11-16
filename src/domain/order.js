@@ -7,6 +7,11 @@
  * @typedef {import("../data/cart_repository")} cartRepository
  * @typedef {import("../data/user_repository")} userRepository
  */
+const { defaultsDeep } = require('lodash');
+const { ulid } = require('ulid');
+const { ErrorModel } = require('../models');
+const { ERROR, ROUTE, LOGS } = require('../constants');
+const { Utils } = require('../libs/utils');
 const defaultOpts = {};
 class OrderService {
   /**
