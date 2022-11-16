@@ -958,6 +958,26 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order:
+    post:
+      x-swagger-router-controller: order
+      operationId: create
+      description: create new order
+      tags:
+        - ERP-order
+      parameters:
+        - in: body
+          name: order
+          description: Data Order
+          schema:
+            $ref: '#/definitions/Order'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object
@@ -1152,3 +1172,51 @@ definitions:
         type: string
       name:
         type: number
+  Order:
+    type: object
+    properties:
+      orderCode:
+        type: string
+      customerId:
+        type: string
+      product:
+        type: array
+        items:
+          type: object
+          properties:
+            productId:
+              type: string
+            number:
+              type: number
+            price:
+              type: number
+      address:
+        type: object
+        properties:
+          street:
+            type: string
+          province:
+            type: string
+          district:
+            type: string
+          ward:
+            type: string
+          status:
+            type: boolean
+      transportFee:
+        type: number
+      typePayment:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      date:
+        type: string
+      totalAmount:
+        type: object
+        properties:
+          total:
+            type: number
+          discount:
+            type: number
