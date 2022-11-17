@@ -43,6 +43,7 @@ class CartService {
     this.repoUser = repoUser;
   }
   async create(data) {
+    data.uid = ulid();
     const output = await this.repo.createOne(data);
     return output;
   }
