@@ -47,6 +47,12 @@ class OrderService {
     data.uid = ulid();
     data.orderCode = await this.repo.generateOrderCode();
     data.date = moment(new Date()).format('YYYY/MM/DD');
+    if (data.product.length === 0) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Hãy thêm sản phẩm vào giỏ hàng',
+      });
+    }
     const output = await this.repo.create(data);
     await this.repoCart.update(
       { customerId: data.customerId },
