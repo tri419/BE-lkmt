@@ -78,7 +78,11 @@ class CartService {
       }
       return ret;
     } else {
-      findCart.product.push({ productId: data.productId, number: data.number });
+      findCart.product.push({
+        productId: data.productId,
+        number: data.number,
+        price: data.price,
+      });
       const ret = await this.repo.update(
         {
           uid: uid,

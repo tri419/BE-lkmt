@@ -958,6 +958,20 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /cart/viewCart:
+    get:
+      x-swagger-router-controller: cart
+      operationId: view
+      description: View cart
+      tags:
+        - ERP-cart
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /order:
     post:
       x-swagger-router-controller: order
@@ -1165,12 +1179,16 @@ definitions:
               type: string
             number:
               type: number
+            price:
+              type: number
   UpdateCart:
     type: object
     properties:
       productId:
         type: string
       name:
+        type: number
+      price:
         type: number
   Order:
     type: object

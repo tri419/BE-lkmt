@@ -43,4 +43,16 @@ module.exports = {
       next(error);
     }
   },
+  view: async (req, res, next) => {
+    try {
+      const customerId = req.headers.customerId || req.headers.customerid;
+      const output = await cartService.viewCart(customerId);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
