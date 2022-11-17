@@ -51,6 +51,13 @@ class ProductService {
   async create(data) {
     data.code = await this.repo.generateCode();
     data.uid = ulid();
+    const checkPrice = data.price * (100 - data.discount);
+    if (data.discountPrice !== checkPrice) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Giá khuyến mãi không khớp',
+      });
+    }
     const output = await this.repo.createOne(data);
     return output;
   }
@@ -60,6 +67,13 @@ class ProductService {
     if (!findProduct) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const checkPrice = data.price * (100 - data.discount);
+    if (data.discountPrice !== checkPrice) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Giá khuyến mãi không khớp',
       });
     }
     const output = await this.repo.updateProductById(msg);
