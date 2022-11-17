@@ -1,5 +1,5 @@
 const { OrderModel } = require('../../../../models');
-const { orderService, customerService } = require('../../../../domain');
+const { orderService, cartService } = require('../../../../domain');
 const { loggerService } = require('../../../../libs/logger');
 
 /**
@@ -19,9 +19,9 @@ module.exports = {
   create: async (req, res, next) => {
     try {
       const customerId = req.headers.customerId || req.headers.customerid;
-      const customer = await customerService.viewCustomerById(customerId);
-      const data = ProductModel.fromRequest(req.body, customer);
-      const output = await productService.create(data);
+      const cart = await cartService.viewCart(customerId);
+      const data = OrderModel.fromRequest(req.body, cart);
+      const output = await orderService.create(data);
       res.json({
         success: true,
         results: output,

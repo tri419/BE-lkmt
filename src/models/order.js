@@ -94,21 +94,22 @@ class Order extends Base {
     const { includedFields, ...Order } = input;
     return Order;
   }
-  static fromRequest(input, cart, customerInfo) {
+  static fromRequest(input, cart) {
     const output = new Order();
     if (input != null) {
       output.uid = Utils.getString(input.uid, '');
-      output.orderCode = customerInfo.orderCode;
-      output.customerId = customerInfo.customerId;
-      output.product = cart.map((item) => {
+      output.orderCode = Utils.getString(input.orderCode, '');
+      output.customerId = cart.customerId;
+      output.product = cart.product.map((item) => {
         const value = {
-          productId: Utils.getString(item.uid, ''),
+          productId: Utils.getString(item.productId, ''),
           number: Utils.getInteger(item.number, 0),
+          price: Utils.getInteger(item.price, 0),
         };
         return value;
       });
       output.transportFee = Utils.getInteger(input.transportFee, 0);
-      output.status = Utils.getString(input.status, '');
+      output.status = Utils.getString(input.status, 'wait_for_confirmation');
       output.typePayment = Utils.getString(input.typePayment, 'COD');
       output.phone = Utils.getString(input.phone, '');
       output.address = {

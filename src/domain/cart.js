@@ -43,7 +43,6 @@ class CartService {
     this.repoUser = repoUser;
   }
   async create(data) {
-    data.uid = ulid();
     const output = await this.repo.createOne(data);
     return output;
   }
@@ -97,6 +96,15 @@ class CartService {
       }
       return ret;
     }
+  }
+  async viewCart(customerId) {
+    const findCart = await this.repo.findOne('customerId', customerId);
+    if (!findCart) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    return findCart;
   }
 }
 module.exports = CartService;

@@ -8,7 +8,6 @@ const schema = mongoose.Schema;
 const ProductSchema = new schema({
   productId: {
     type: String,
-    required: true,
   },
   number: {
     type: Number,
@@ -20,19 +19,15 @@ const ProductSchema = new schema({
 const AddressSchema = new schema({
   street: {
     type: String,
-    required: true,
   },
   province: {
     type: String,
-    required: true,
   },
   district: {
     type: String,
-    required: true,
   },
   ward: {
     type: String,
-    required: true,
   },
 });
 const OrderSchema = new schema({
@@ -71,7 +66,6 @@ const OrderSchema = new schema({
   address: [AddressSchema],
   date: {
     type: String,
-    required: true,
   },
   totalAmount: {
     total: {
