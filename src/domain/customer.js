@@ -11,6 +11,7 @@ const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
 const moment = require('moment');
+const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
 const Customer = require('../models/customer');
 
 const defaultOpts = {};
@@ -54,21 +55,24 @@ class CustomerService {
   }
   async updateCustomer(msg) {
     const { uid, data } = msg;
-    // const coll = await this.repo.findCustomer(
-    //   {
-    //     username: { $regex: `^${data.username}$`, $options: 'i' },
-    //   },
-    //   1,
-    //   1,
-    //   false,
-    // );
-    // if (coll.total > 0) {
-    //   throw ErrorModel.initWithParams({
-    //     ...ERROR.VALIDATION.INVALID_REQUEST,
-    //     message: 'Tên đăng nhập đã tồn tại.',
-    //   });
-    // }
+    const coll = await this.repo.findCustomer(
+      {
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.data[0].uid !== uid) {
+      if (coll.total > 0) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Tên đăng nhập đã tồn tại.',
+        });
+      }
+    }
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
+    data.password = hashText(data.password);
     const findCustomer = await this.repo.findOne('uid', uid);
     if (!findCustomer) {
       throw ErrorModel.initWithParams({
