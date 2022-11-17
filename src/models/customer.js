@@ -92,7 +92,7 @@ class Customer extends Base {
       output.sex = Utils.getString(input.sex, '');
       output.phone = Utils.getString(input.phone, '');
       output.email = Utils.getString(input.email, '');
-      output.status = Utils.getBoolean(input.status, false);
+      output.status = Utils.getBoolean(input.status, true);
       output.avatar = Utils.getString(input.avatar, '');
       output.address = [
         {

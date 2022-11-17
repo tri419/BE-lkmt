@@ -36,6 +36,7 @@ class Cart extends Base {
         return {
           productId: item.productId,
           number: item.number,
+          price: item.price,
         };
       });
       output.createdAt = input.createdAt;
@@ -70,7 +71,19 @@ class Cart extends Base {
     if (input != null) {
       output.productId = Utils.getString(input.productId, '');
       output.number = Utils.getInteger(input.number, 0);
+      output.price = Utils.getInteger(input.price, 0);
     }
+    return output;
+  }
+  static create(input, customerId) {
+    const output = new Cart();
+    if (customerId != null) {
+      output.uid = '';
+      output.customerId = Utils.getString(customerId, '');
+    }
+    output.includedFields = Utils.extractIncludeAttributes(
+      input.includedFields,
+    );
     return output;
   }
 }

@@ -57,7 +57,6 @@ const CustomerSchema = mongoose.Schema(
     },
     status: {
       type: Boolean,
-      required: true,
     },
     avatar: {
       type: String,

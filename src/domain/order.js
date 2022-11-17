@@ -12,6 +12,7 @@ const { ulid } = require('ulid');
 const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
+const moment = require('moment');
 const defaultOpts = {};
 class OrderService {
   /**
@@ -44,7 +45,17 @@ class OrderService {
   }
   async create(data) {
     data.uid = ulid();
+    data.orderCode = await this.repo.generateOrderCode();
+    data.date = moment(new Date()).format('YYYY/MM/DD');
     const output = await this.repo.create(data);
+    await this.repoCart.update(
+      { customerId: data.customerId },
+      {
+        $set: {
+          product: [],
+        },
+      },
+    );
     return output;
   }
 }
