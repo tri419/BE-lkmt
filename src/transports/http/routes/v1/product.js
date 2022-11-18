@@ -1,5 +1,5 @@
 const { ProductModel } = require('../../../../models');
-const { productService } = require('../../../../domain');
+const { productService, customerService } = require('../../../../domain');
 const { loggerService } = require('../../../../libs/logger');
 
 /**
@@ -79,6 +79,7 @@ module.exports = {
   },
   search: async (req, res, next) => {
     try {
+      await customerService.auth(req, res, next);
       const data = ProductModel.searchProduct(req.query);
       const output = await productService.searchProduct(data);
       res.json({

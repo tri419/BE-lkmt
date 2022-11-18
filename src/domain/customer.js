@@ -13,7 +13,7 @@ const { Utils } = require('../libs/utils');
 const moment = require('moment');
 const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
 const Customer = require('../models/customer');
-
+const JWT = require('jsonwebtoken');
 const defaultOpts = {};
 class CustomerService {
   /**
@@ -136,7 +136,35 @@ class CustomerService {
           'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
       });
     }
-    return customer;
+    const token = await this.generateCode(customer);
+    return { customer, token };
+  }
+  async generateCode(data) {
+    return JWT.sign(
+      {
+        iss: data.name,
+        uid: data.uid,
+        iat: new Date().getTime(),
+        exp: new Date().setDate(new Date().getDate() + 3),
+      },
+      process.env.JWT_KEY,
+    );
+  }
+  async auth(req, res, next) {
+    if (req.header('Authorization') == '') {
+      res.status(401).send({ error: 'Request null' });
+    }
+    const token = req.header('Authorization').replace('Bearer ', '');
+    const data = JWT.verify(token, process.env.JWT_KEY);
+    try {
+      const customer = await this.repo.findOne('uid', data.uid);
+      if (!customer) {
+        throw new Error();
+      }
+      req.customer = customer.uid;
+    } catch (error) {
+      res.status(401).send({ error: 'Not authorized to access this resource' });
+    }
   }
 }
 module.exports = CustomerService;
