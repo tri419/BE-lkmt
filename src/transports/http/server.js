@@ -8,6 +8,7 @@ const { defaultsDeep } = require('lodash');
 const path = require('path');
 const swaggerTools = require('swagger-tools');
 const yaml = require('js-yaml');
+const cors = require('cors');
 
 const { ErrorModel } = require('../../models');
 const { ERROR } = require('../../constants');
@@ -42,6 +43,7 @@ class HttpServer {
     };
 
     this.app = express();
+    this.app.use(cors());
     this.app.enable('case sensitive routing');
     this.app.enable('trust proxy');
     this.app.disable('x-powered-by');

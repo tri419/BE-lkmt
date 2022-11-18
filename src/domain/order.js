@@ -64,5 +64,36 @@ class OrderService {
     );
     return output;
   }
+  async searchOrder(data) {
+    const output = await this.repo.search(data);
+    return output;
+  }
+  async viewOrderById(uid) {
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const findCustomer = await this.repoCustomer.findOne(
+      'uid',
+      findOrder.customerId,
+    );
+    const output = {
+      uid: uid,
+      orderCode: findOrder.orderCode,
+      customerId: findOrder.customerId,
+      customerName: findCustomer.name,
+      product: findOrder.product,
+      status: findOrder.status,
+      typePayment: findOrder.typePayment,
+      phone: findOrder.phone,
+      email: findOrder.email,
+      address: findOrder.address,
+      totalAmount: findOrder.totalAmount,
+      shipperId: findOrder.shipperId,
+    };
+    return output;
+  }
 }
 module.exports = OrderService;

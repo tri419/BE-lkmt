@@ -992,6 +992,55 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+    get:
+      x-swagger-router-controller: order
+      operationId: search
+      description: Search order
+      tags:
+        - ERP-order
+      parameters:
+        - name: code
+          type: string
+          in: query
+          required: false
+        - name: status
+          type: string
+          in: query
+          required: false
+        - name: page
+          type: string
+          in: query
+          required: false
+        - name: limit
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/{uid}:
+    get:
+      x-swagger-router-controller: order
+      operationId: view
+      description: View order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object

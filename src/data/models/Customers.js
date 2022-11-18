@@ -88,5 +88,6 @@ CustomerSchema.pre('save', function (next) {
   customer.password = hashText(customer.password);
   next();
 });
+
 CustomerSchema.plugin(mongooseDelete, { overrideMethods: true });
 module.exports = getDefaultDB().model('Customers', CustomerSchema);

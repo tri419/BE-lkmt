@@ -183,5 +183,59 @@ class OrderRepository extends BaseRepository {
     const year = new Date().getFullYear().toString().substr(-2);
     return `DH${year}${month}${date}${number}`;
   }
+  async search(data) {
+    const paging = {
+      total: 0,
+      page: data.page,
+      limit: data.limit,
+    };
+    const pipe = [
+      {
+        $lookup: {
+          from: 'customers',
+          localField: 'customerId',
+          foreignField: 'uid',
+          as: 'customer',
+        },
+      },
+      {
+        $unwind: '$customer',
+      },
+      {
+        $match: {
+          orderCode: !data.code
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.code, $options: 'i' },
+          status: !data.status
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.status, $options: 'i' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          uid: 1,
+          orderCode: 1,
+          customer: '$customer.name',
+          total: '$totalAmount.total',
+          date: 1,
+          status: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipe)
+      .sort({ createdAt: -1 })
+      .skip((data.page - 1) * data.limit)
+      .limit(data.limit);
+
+    const total = await OrderDto.aggregate(pipe).count('orderCode');
+    paging.total = total.length > 0 ? total[0].orderCode : 0;
+
+    if (coll.total === 0) {
+      return coll;
+    }
+    return [coll, paging];
+  }
 }
 module.exports = OrderRepository;
