@@ -17,6 +17,7 @@
     "mongodb": "3.5.8",
     "mongoose": "5.9.16",
     "mongoose-delete": "0.5.2",
+    "paypal-rest-sdk": "^1.8.1",
     "pino": "^6.11.2",
     "r7insight_node": "^3.2.0",
     "stack-trace": "0.0.10",

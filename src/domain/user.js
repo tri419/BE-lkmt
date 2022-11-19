@@ -184,5 +184,9 @@ class UserService {
       res.status(401).send({ error: 'Not authorized to access this resource' });
     }
   }
+  async searchUserShipper() {
+    const output = await this.repo.searchShipper();
+    return output;
+  }
 }
 module.exports = UserService;

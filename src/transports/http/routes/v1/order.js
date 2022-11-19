@@ -1,7 +1,7 @@
 const { OrderModel } = require('../../../../models');
 const { orderService, cartService } = require('../../../../domain');
 const { loggerService } = require('../../../../libs/logger');
-
+const paypal = require('paypal-rest-sdk');
 /**
  * @typedef {import("express").Request} Request
  * @typedef {import("express").Response} Response
@@ -63,6 +63,76 @@ module.exports = {
         success: true,
         results: output,
       });
+    } catch (error) {
+      next(error);
+    }
+  },
+  createPaypal: async (req, res, next) => {
+    try {
+      const data = OrderModel.paypal(req.body);
+      const create_payment_json = {
+        intent: 'sale',
+        payer: {
+          payment_method: 'paypal',
+        },
+        redirect_urls: {
+          return_url: 'http://localhost:3000/api/v1/success',
+          cancel_url: 'http://localhost:3000/api/v1/cancel',
+        },
+        transactions: [
+          {
+            amount: {
+              currency: 'USD',
+              total: data.price,
+            },
+            description: 'Washing Bar soap',
+          },
+        ],
+      };
+      paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+          throw error;
+        } else {
+          for (let i = 0; i < payment.links.length; i++) {
+            if (payment.links[i].rel === 'approval_url') {
+              res.json(payment.links[i].href);
+            }
+          }
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  success: async (req, res, next) => {
+    try {
+      const payerId = req.query.PayerID;
+      const paymentId = req.query.paymentId;
+      const execute_payment_json = {
+        payer_id: payerId,
+        transactions: [
+          {
+            amount: {
+              currency: 'USD',
+              total: '25.00',
+            },
+          },
+        ],
+      };
+      paypal.payment.execute(
+        paymentId,
+        execute_payment_json,
+        function (error, payment) {
+          //When error occurs when due to non-existent transaction, throw an error else log the transaction details in the console then send a Success string reposponse to the user.
+          if (error) {
+            console.log(error.response);
+            throw error;
+          } else {
+            console.log(JSON.stringify(payment));
+            res.json('Success');
+          }
+        },
+      );
     } catch (error) {
       next(error);
     }

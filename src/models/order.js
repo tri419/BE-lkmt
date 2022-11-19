@@ -113,10 +113,10 @@ class Order extends Base {
       output.typePayment = Utils.getString(input.typePayment, 'COD');
       output.phone = Utils.getString(input.phone, '');
       output.address = {
-        street: Utils.getString(input.street, ''),
-        province: Utils.getString(input.province, ''),
-        district: Utils.getString(input.district, ''),
-        ward: Utils.getString(input.ward, ''),
+        street: Utils.getString(input.address.street, ''),
+        province: Utils.getString(input.address.province, ''),
+        district: Utils.getString(input.address.district, ''),
+        ward: Utils.getString(input.address.ward, ''),
       };
       output.totalAmount = {
         total: Utils.getInteger(input.totalAmount.total, 0),
@@ -149,6 +149,13 @@ class Order extends Base {
     const output = {};
     if (input != null) {
       output.status = Utils.getString(input.status, 'approved');
+    }
+    return output;
+  }
+  static paypal(input) {
+    const output = {};
+    if (input != null) {
+      output.price = Utils.getString(input.price, '1');
     }
     return output;
   }
