@@ -1122,6 +1122,93 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/readyToShip/{uid}:
+    put:
+      x-swagger-router-controller: order
+      operationId: readyToShip
+      description: ready_to_ship order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+        - in: body
+          name: ready_to_ship order
+          description: ready to ship order
+          schema:
+            $ref: '#/definitions/readyToShipOrder'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/listOrderShipper:
+    get:
+      x-swagger-router-controller: order
+      operationId: listOrderShipper
+      description: listOrderShipper order
+      tags:
+        - ERP-order
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/transport/{uid}:
+    put:
+      x-swagger-router-controller: order
+      operationId: transport
+      description: transport order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+        - in: body
+          name: transport order
+          description: transport order
+          schema:
+            $ref: '#/definitions/transportOrder'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/complete/{uid}:
+    put:
+      x-swagger-router-controller: order
+      operationId: complete
+      description: completed order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+        - in: body
+          name: complete order
+          description: complete order
+          schema:
+            $ref: '#/definitions/completeOrder'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+
 definitions:
   Pong:
     type: object
@@ -1373,9 +1460,29 @@ definitions:
     properties:
       status:
         type: string
-        enum: ['approved']
+        description: approved
   Paypal:
     type: object
     properties:
       price:
         type: string
+  readyToShipOrder:
+    type: object
+    properties:
+      shipperId:
+        type: string
+      status:
+        type: string
+        description: ready_to_ship
+  transportOrder:
+    type: object
+    properties:
+      status:
+        type: string
+        description: transporting
+  completeOrder:
+    type: object
+    properties:
+      status:
+        type: string
+        description: completed

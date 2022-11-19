@@ -237,5 +237,28 @@ class OrderRepository extends BaseRepository {
     }
     return [coll, paging];
   }
+  async listOrderShipper(userId) {
+    const pipe = [
+      {
+        $match: {
+          shipperId: userId,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          uid: 1,
+          orderCode: 1,
+          customer: '$customer.name',
+          total: '$totalAmount.total',
+          date: 1,
+          status: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipe).sort({ createdAt: -1 });
+    return coll;
+  }
 }
 module.exports = OrderRepository;
