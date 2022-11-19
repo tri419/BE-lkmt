@@ -116,7 +116,13 @@ class CartService {
         'uid',
         findCart.product[i].productId,
       );
-      listProduct.push(findProduct);
+      listProduct.push({
+        productId: findProduct.uid,
+        number: findCart.product[i].number,
+        image: findProduct.image,
+        price: findCart.product[i].price,
+        discount: findProduct.discount,
+      });
     }
     findCart.product = listProduct;
     return findCart;
