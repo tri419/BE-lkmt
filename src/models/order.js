@@ -145,5 +145,12 @@ class Order extends Base {
     }
     return output;
   }
+  static approveOrder(input) {
+    const output = {};
+    if (input != null) {
+      output.status = Utils.getString(input.status, 'approved');
+    }
+    return output;
+  }
 }
 module.exports = Order;

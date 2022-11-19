@@ -1041,6 +1041,30 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/approve/{uid}:
+    put:
+      x-swagger-router-controller: order
+      operationId: approve
+      description: approve order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+        - in: body
+          name: approve order
+          description: approve order
+          schema:
+            $ref: '#/definitions/approveOrder'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object
@@ -1287,3 +1311,9 @@ definitions:
             type: number
           discount:
             type: number
+  approveOrder:
+    type: object
+    properties:
+      status:
+        type: string
+        enum: ['approved']
