@@ -1,11 +1,12 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
- * @typedef {import("../data/product_repository")} productRepository
+ * @typedef {import("../data/cart_repository")} cartRepository
  * @typedef {import("../data/customer_repository")} customerRepository
+ * @typedef {import("../data/product_repository")} productRepository
  * @typedef {import("../data/order_repository")} orderRepository
  * @typedef {import("../data/user_repository")} userRepository
- * @typedef {import("../data/cart_repository")} cartRepository
+ 
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
@@ -109,6 +110,15 @@ class CartService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
+    const listProduct = [];
+    for (let i = 0; i < findCart.product.length; i++) {
+      const findProduct = await this.repoProduct.findOne(
+        'uid',
+        findCart.product[i].productId,
+      );
+      listProduct.push(findProduct);
+    }
+    findCart.product = listProduct;
     return findCart;
   }
 }

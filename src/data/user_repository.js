@@ -199,5 +199,35 @@ class UserRepository extends BaseRepository {
     user.password = undefined;
     return user;
   }
+  async searchShipper() {
+    const pipe = [
+      {
+        $lookup: {
+          from: 'roles',
+          localField: 'roleId',
+          foreignField: 'uid',
+          as: 'role',
+        },
+      },
+      {
+        $unwind: '$role',
+      },
+      {
+        $match: {
+          'role.name': 'Shipper',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          uid: 1,
+          name: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+    const coll = await UserDto.aggregate(pipe).sort({ createdAt: -1 });
+    return coll;
+  }
 }
 module.exports = UserRepository;

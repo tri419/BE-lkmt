@@ -622,6 +622,49 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/pay:
+    post:
+      x-swagger-router-controller: order
+      operationId: createPaypal
+      description: create Paypal
+      tags:
+        - ERP-order
+      parameters:
+        - in: body
+          name: price Paypal
+          description: Data paypal
+          schema:
+            $ref: '#/definitions/Paypal'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /success:
+    get:
+      x-swagger-router-controller: order
+      operationId: success
+      description: success Paypal
+      tags:
+        - ERP-order
+      parameters:
+        - name: PayerID
+          type: string
+          in: query
+          required: false
+        - name: paymentId
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /role:
     post:
       x-swagger-router-controller: role
@@ -887,6 +930,20 @@ paths:
           description: Data user
           schema:
             $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /user/listShipper:
+    get:
+      x-swagger-router-controller: user
+      operationId: listUserShipper
+      description: list user
+      tags:
+        - ERP-user
       responses:
         '200':
           description: Pong
@@ -1236,10 +1293,10 @@ definitions:
     properties:
       username:
         type: string
-        example: Cao Trí
+        example: caotri
       password:
         type: string
-        example: 121212
+        example: caotri
   Cart:
     type: object
     properties:
@@ -1317,3 +1374,8 @@ definitions:
       status:
         type: string
         enum: ['approved']
+  Paypal:
+    type: object
+    properties:
+      price:
+        type: string

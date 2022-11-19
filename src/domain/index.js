@@ -72,6 +72,8 @@ const cartService = new CartService(
   cartRepository,
   customerRepository,
   productRepository,
+  orderRepository,
+  userRepository,
 );
 const orderService = new OrderService(
   {},

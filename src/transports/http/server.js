@@ -2,6 +2,7 @@
 const { ulid } = require('ulid');
 const bodyParser = require('body-parser');
 const express = require('express');
+const paypal = require('paypal-rest-sdk');
 const fs = require('fs');
 const stackTrace = require('stack-trace');
 const { defaultsDeep } = require('lodash');
@@ -68,6 +69,14 @@ class HttpServer {
     } catch (err) {
       this.logger.error(err.message, err);
     }
+
+    paypal.configure({
+      mode: 'sandbox', //sandbox or live
+      client_id:
+        'ASqK-_wIOEZ8TNFmwU4urBQSIXpvOSshNVR-uh5vkll4vCTt5dgiifNWXVLb93KY473sbXnEkxnBfWQO',
+      client_secret:
+        'EFIujFEE8biZZg1nUdJIe-8nwgyVQh64ds0C0-8ckODOd8WGN-ecCHNgZBja-Zce2umgL_JPX8aeiOcr',
+    });
   }
 
   /**

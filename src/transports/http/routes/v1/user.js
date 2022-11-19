@@ -102,4 +102,15 @@ module.exports = {
       next(error);
     }
   },
+  listUserShipper: async (req, res, next) => {
+    try {
+      const output = await userService.searchUserShipper();
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
