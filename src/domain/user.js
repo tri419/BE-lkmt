@@ -147,6 +147,13 @@ class UserService {
           'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
       });
     }
+    const findRole = await this.repoRole.findOne('uid', user.roleId);
+    if (!findRole) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    user.roleId = findRole.name;
     const token = await this.generateCode(user);
     return { user, token };
   }
