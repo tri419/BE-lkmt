@@ -54,4 +54,17 @@ module.exports = {
       next(error);
     }
   },
+  approve: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = OrderModel.approveOrder(req.body);
+      const output = await orderService.approveOrder({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

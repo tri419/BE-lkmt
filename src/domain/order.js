@@ -95,5 +95,16 @@ class OrderService {
     };
     return output;
   }
+  async approveOrder(msg) {
+    const { uid, data } = msg;
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const output = await this.repo.updateOrder(msg);
+    return output;
+  }
 }
 module.exports = OrderService;

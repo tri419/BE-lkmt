@@ -5,13 +5,15 @@
  * @typedef {import("../data/customer_repository")} customerRepository
  * @typedef {import("../data/order_repository")} orderRepository
  * @typedef {import("../data/user_repository")} userRepository
+ * @typedef {import("../data/role_repository")} roleRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
 const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
-
+const JWT = require('jsonwebtoken');
+const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
 const defaultOpts = {};
 
 class UserService {
@@ -23,8 +25,17 @@ class UserService {
    * @param {customerRepository} repoCustomer
    * @param {orderRepository} repoOrder
    * @param {userRepository} repo
+   * @param {roleRepository} repoRole
    */
-  constructor(opts, policy, repoProduct, repoCustomer, repoOrder, repo) {
+  constructor(
+    opts,
+    policy,
+    repoProduct,
+    repoCustomer,
+    repoOrder,
+    repo,
+    repoRole,
+  ) {
     /** @type {defaultOpts} */
     this.opts = defaultsDeep(opts, defaultOpts);
     this.policy = policy;
@@ -32,8 +43,23 @@ class UserService {
     this.repoCustomer = repoCustomer;
     this.repoOrder = repoOrder;
     this.repo = repo;
+    this.repoRole = repoRole;
   }
   async create(data) {
+    const coll = await this.repo.findUser(
+      {
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.total > 0) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Tên đăng nhập đã tồn tại.',
+      });
+    }
     data.code = await this.repo.generateCode();
     data.uid = ulid();
     const output = await this.repo.createOne(data);
@@ -41,12 +67,29 @@ class UserService {
   }
   async updateUser(msg) {
     const { uid, data } = msg;
+    const coll = await this.repo.findUser(
+      {
+        username: { $regex: `^${data.username}$`, $options: 'i' },
+      },
+      1,
+      1,
+      false,
+    );
+    if (coll.data[0].uid !== uid) {
+      if (coll.total > 0) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Tên đăng nhập đã tồn tại.',
+        });
+      }
+    }
     const findUser = await this.repo.findOne('uid', uid);
     if (!findUser) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
+    data.password = hashText(data.password);
     const output = await this.repo.updateUserById(msg);
     return output;
   }
@@ -104,7 +147,35 @@ class UserService {
           'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
       });
     }
-    return user;
+    const token = await this.generateCode(user);
+    return { user, token };
+  }
+  async generateCode(data) {
+    return JWT.sign(
+      {
+        iss: data.name,
+        uid: data.uid,
+        iat: new Date().getTime(),
+        exp: new Date().setDate(new Date().getDate() + 3),
+      },
+      process.env.JWT_KEY,
+    );
+  }
+  async auth(req, res, next) {
+    if (req.header('Authorization') == '') {
+      res.status(401).send({ error: 'Request null' });
+    }
+    const token = req.header('Authorization').replace('Bearer ', '');
+    const data = JWT.verify(token, process.env.JWT_KEY);
+    try {
+      const user = await this.repo.findOne('uid', data.uid);
+      if (!user) {
+        throw new Error();
+      }
+      req.user = user.uid;
+    } catch (error) {
+      res.status(401).send({ error: 'Not authorized to access this resource' });
+    }
   }
 }
 module.exports = UserService;

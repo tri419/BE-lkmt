@@ -63,6 +63,7 @@ const userService = new UserService(
   customerRepository,
   orderRepository,
   userRepository,
+  roleRepository,
 );
 const roleService = new RoleService({}, policyService, roleRepository);
 const cartService = new CartService(
