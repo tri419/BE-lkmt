@@ -67,6 +67,19 @@ module.exports = {
       next(error);
     }
   },
+  readyToShip: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = OrderModel.readyToShip(req.body);
+      const output = await orderService.readyToShipOrder({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
   createPaypal: async (req, res, next) => {
     try {
       const data = OrderModel.paypal(req.body);
@@ -133,6 +146,44 @@ module.exports = {
           }
         },
       );
+    } catch (error) {
+      next(error);
+    }
+  },
+  listOrderShipper: async (req, res, next) => {
+    try {
+      const userId = req.headers.userId || req.headers.userid;
+      const output = await orderService.listOrderShipper(userId);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  transport: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = OrderModel.transportOrder(req.body);
+      const output = await orderService.transportOrder({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  complete: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = OrderModel.completeOrder(req.body);
+      const output = await orderService.completeOrder({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
     } catch (error) {
       next(error);
     }

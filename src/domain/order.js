@@ -104,6 +104,63 @@ class OrderService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
+    if (findOrder.status !== 'wait_for_confirmation') {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Trạng thái đơn hàng không hợp lệ',
+      });
+    }
+    const output = await this.repo.updateOrder(msg);
+    return output;
+  }
+  async readyToShipOrder(msg) {
+    const { uid, data } = msg;
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    if (findOrder.status !== 'approved') {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Trạng thái đơn hàng không hợp lệ',
+      });
+    }
+    const output = await this.repo.updateOrder(msg);
+    return output;
+  }
+  async transportOrder(msg) {
+    const { uid, data } = msg;
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    if (findOrder.status !== 'ready_to_ship') {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Trạng thái đơn hàng không hợp lệ',
+      });
+    }
+    const output = await this.repo.updateOrder(msg);
+    return output;
+  }
+  async completeOrder(msg) {
+    const { uid, data } = msg;
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    if (findOrder.status !== 'transporting') {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Trạng thái đơn hàng không hợp lệ',
+      });
+    }
     const output = await this.repo.updateOrder(msg);
     return output;
   }
@@ -152,18 +209,10 @@ class OrderService {
         }
       }
     });
-    //return link;
   }
-  // async payment(error, payment) {
-  //   if (error) {
-  //     throw error;
-  //   } else {
-  //     for (let i = 0; i < payment.links.length; i++) {
-  //       if (payment.links[i].rel === 'approval_url') {
-  //         return payment.links[i].href;
-  //       }
-  //     }
-  //   }
-  // }
+  async listOrderShipper(userId) {
+    const output = await this.repo.listOrderShipper(userId);
+    return output;
+  }
 }
 module.exports = OrderService;

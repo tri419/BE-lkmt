@@ -159,5 +159,27 @@ class Order extends Base {
     }
     return output;
   }
+  static readyToShip(input) {
+    const output = {};
+    if (input != null) {
+      output.shipperId = Utils.getString(input.shipperId, '');
+      output.status = Utils.getString(input.status, 'approved');
+    }
+    return output;
+  }
+  static transportOrder(input) {
+    const output = {};
+    if (input != null) {
+      output.status = Utils.getString(input.status, 'transporting');
+    }
+    return output;
+  }
+  static completeOrder(input) {
+    const output = {};
+    if (input != null) {
+      output.status = Utils.getString(input.status, 'completed');
+    }
+    return output;
+  }
 }
 module.exports = Order;
