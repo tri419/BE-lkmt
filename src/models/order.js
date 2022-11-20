@@ -79,6 +79,7 @@ class Order extends Base {
         discount: input.totalAmount.discount,
       };
       output.shipperId = input.shipperId;
+      output.deliveryDate = input.deliveryDate;
       output.createdAt = input.createdAt;
       output.updatedAt = input.updatedAt;
     }
@@ -125,6 +126,7 @@ class Order extends Base {
       output.email = Utils.getString(input.email, '');
       output.date = '';
       output.shipperId = Utils.getString(input.shipperId, '');
+      output.deliveryDate = '';
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
       );
@@ -177,7 +179,15 @@ class Order extends Base {
   static completeOrder(input) {
     const output = {};
     if (input != null) {
+      output.deliveryDate = '';
       output.status = Utils.getString(input.status, 'completed');
+    }
+    return output;
+  }
+  static cancelOrder(input) {
+    const output = {};
+    if (input != null) {
+      output.status = Utils.getString(input.status, 'cancelled');
     }
     return output;
   }
