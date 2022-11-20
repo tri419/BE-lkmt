@@ -188,4 +188,29 @@ module.exports = {
       next(error);
     }
   },
+  historyOrder: async (req, res, next) => {
+    try {
+      const customerId = req.headers.customerId || req.headers.customerid;
+      const output = await orderService.historyOrder(customerId);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  cancel: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = OrderModel.cancelOrder(req.body);
+      const output = await orderService.cancelOrder({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

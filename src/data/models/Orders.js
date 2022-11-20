@@ -83,6 +83,9 @@ const OrderSchema = new schema(
     shipperId: {
       type: String,
     },
+    deliveryDate: {
+      type: String,
+    },
   },
   { timestamps: true },
 );

@@ -149,6 +149,7 @@ class OrderService {
   }
   async completeOrder(msg) {
     const { uid, data } = msg;
+    data.deliveryDate = moment(new Date()).format('YYYY/MM/DD');
     const findOrder = await this.repo.findOne('uid', uid);
     if (!findOrder) {
       throw ErrorModel.initWithParams({
@@ -212,6 +213,27 @@ class OrderService {
   }
   async listOrderShipper(userId) {
     const output = await this.repo.listOrderShipper(userId);
+    return output;
+  }
+  async historyOrder(customerId) {
+    const output = await this.repo.historyOrder(customerId);
+    return output;
+  }
+  async cancelOrder(msg) {
+    const { uid, data } = msg;
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    if (findOrder.status !== 'wait_for_confirmation') {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Trạng thái đơn hàng không hợp lệ',
+      });
+    }
+    const output = await this.repo.updateOrder(msg);
     return output;
   }
 }

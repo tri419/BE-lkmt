@@ -118,6 +118,7 @@ class CartService {
       );
       listProduct.push({
         productId: findProduct.uid,
+        name: findProduct.name,
         number: findCart.product[i].number,
         image: findProduct.image,
         price: findCart.product[i].price,

@@ -665,6 +665,20 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/historyOrder:
+    get:
+      x-swagger-router-controller: order
+      operationId: historyOrder
+      description: history Order Of Customer
+      tags:
+        - ERP-order
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /role:
     post:
       x-swagger-router-controller: role
@@ -1146,6 +1160,30 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/cancel/{uid}:
+    put:
+      x-swagger-router-controller: order
+      operationId: cancel
+      description: cancel order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          type: string
+        - in: body
+          name: cancel order
+          description: cancel order
+          schema:
+            $ref: '#/definitions/cancelOrder'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /order/listOrderShipper:
     get:
       x-swagger-router-controller: order
@@ -1486,3 +1524,9 @@ definitions:
       status:
         type: string
         description: completed
+  cancelOrder:
+    type: object
+    properties:
+      status:
+        type: string
+        description: cancelled
