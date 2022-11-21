@@ -248,6 +248,23 @@ class OrderService {
   }
   async historyOrder(customerId) {
     const output = await this.repo.historyOrder(customerId);
+    for (let i = 0; i < output.length; i++) {
+      const product = [];
+      for (let index = 0; index < output[i].product.length; index++) {
+        const findProduct = await this.repoProduct.findOne(
+          'uid',
+          output[i].product[index].productId,
+        );
+        product.push({
+          productId: findProduct.uid,
+          name: findProduct.name,
+          image: findProduct.image,
+          number: output[i].product[index].number,
+          price: output[i].product[index].price,
+        });
+      }
+      output[i].product = product;
+    }
     return output;
   }
   async cancelOrder(msg) {
