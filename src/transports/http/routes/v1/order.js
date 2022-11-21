@@ -213,4 +213,29 @@ module.exports = {
       next(error);
     }
   },
+  createOrderAdmin: async (req, res, next) => {
+    try {
+      const data = OrderModel.createOrder(req.body);
+      const output = await orderService.createOrderAdmin(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  update: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = OrderModel.update(req.body);
+      const output = await orderService.updateOrder({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

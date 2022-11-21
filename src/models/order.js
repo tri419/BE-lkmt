@@ -191,5 +191,73 @@ class Order extends Base {
     }
     return output;
   }
+  static createOrder(input) {
+    const output = new Order();
+    if (input != null) {
+      output.uid = Utils.getString(input.uid, '');
+      output.orderCode = Utils.getString(input.orderCode, '');
+      output.customerId = Utils.getString(input.customerId, '');
+      output.product = input.product.map((item) => {
+        const value = {
+          productId: Utils.getString(item.productId, ''),
+          number: Utils.getInteger(item.number, 0),
+          price: Utils.getInteger(item.price, 0),
+        };
+        return value;
+      });
+      output.transportFee = Utils.getInteger(input.transportFee, 0);
+      output.status = Utils.getString(input.status, 'wait_for_confirmation');
+      output.typePayment = Utils.getString(input.typePayment, 'COD');
+      output.phone = Utils.getString(input.phone, '');
+      output.address = {
+        street: Utils.getString(input.address.street, ''),
+        province: Utils.getString(input.address.province, ''),
+        district: Utils.getString(input.address.district, ''),
+        ward: Utils.getString(input.address.ward, ''),
+      };
+      output.totalAmount = {
+        total: Utils.getInteger(input.totalAmount.total, 0),
+        discount: Utils.getInteger(input.totalAmount.discount, 0),
+      };
+      output.email = Utils.getString(input.email, '');
+      output.date = '';
+      output.shipperId = Utils.getString(input.shipperId, '');
+      output.deliveryDate = '';
+      output.includedFields = Utils.extractIncludeAttributes(
+        input.includedFields,
+      );
+    }
+    return output;
+  }
+  static update(input) {
+    const output = {};
+    if (input != null) {
+      output.customerId = Utils.getString(input.customerId, '');
+      output.product = input.product.map((item) => {
+        const value = {
+          productId: Utils.getString(item.productId, ''),
+          number: Utils.getInteger(item.number, 0),
+          price: Utils.getInteger(item.price, 0),
+        };
+        return value;
+      });
+      output.transportFee = Utils.getInteger(input.transportFee, 0);
+      output.status = Utils.getString(input.status, 'wait_for_confirmation');
+      output.typePayment = Utils.getString(input.typePayment, 'COD');
+      output.phone = Utils.getString(input.phone, '');
+      output.address = {
+        street: Utils.getString(input.address.street, ''),
+        province: Utils.getString(input.address.province, ''),
+        district: Utils.getString(input.address.district, ''),
+        ward: Utils.getString(input.address.ward, ''),
+      };
+      output.totalAmount = {
+        total: Utils.getInteger(input.totalAmount.total, 0),
+        discount: Utils.getInteger(input.totalAmount.discount, 0),
+      };
+      output.email = Utils.getString(input.email, '');
+    }
+    return output;
+  }
 }
 module.exports = Order;
