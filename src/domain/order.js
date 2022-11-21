@@ -65,6 +65,37 @@ class OrderService {
     );
     return output;
   }
+  async createOrderAdmin(data) {
+    data.uid = ulid();
+    data.orderCode = await this.repo.generateOrderCode();
+    data.date = moment(new Date()).format('YYYY/MM/DD');
+    if (data.product.length === 0) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Hãy thêm sản phẩm vào đơn hàng',
+      });
+    }
+    const output = await this.repo.create(data);
+    return output;
+  }
+  async updateOrder(msg) {
+    const { uid, data } = msg;
+    const findOrder = await this.repo.findOne('uid', uid);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Không tìm thấy đơn hàng đơn hàng',
+      });
+    }
+    if (data.product.length === 0) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Hãy thêm sản phẩm vào đơn hàng',
+      });
+    }
+    const output = await this.repo.updateOrder(msg);
+    return output;
+  }
   async searchOrder(data) {
     const output = await this.repo.search(data);
     return output;
