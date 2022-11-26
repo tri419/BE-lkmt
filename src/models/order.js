@@ -259,5 +259,13 @@ class Order extends Base {
     }
     return output;
   }
+  static homePage(input) {
+    const output = {};
+    if (input) {
+      output.start = Utils.getString(input.start, '');
+      output.end = Utils.getString(input.end, '');
+    }
+    return output;
+  }
 }
 module.exports = Order;

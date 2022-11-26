@@ -238,4 +238,16 @@ module.exports = {
       next(error);
     }
   },
+  homePage: async (req, res, next) => {
+    try {
+      const data = OrderModel.homePage(req.query);
+      const output = await orderService.homePage(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -284,5 +284,17 @@ class OrderService {
     const output = await this.repo.updateOrder(msg);
     return output;
   }
+  async homePage(data) {
+    const orderInDate = await this.repo.orderInDate();
+    const statusOrder = await this.repo.statusOrder();
+    const topProduct = await this.repo.topProduct(data);
+    const totalAmount = await this.repo.totalAmount(data);
+    return {
+      orderInDate,
+      statusOrder,
+      topProduct,
+      totalAmount,
+    };
+  }
 }
 module.exports = OrderService;

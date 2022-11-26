@@ -1290,6 +1290,29 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/homePage:
+    get:
+      x-swagger-router-controller: order
+      operationId: homePage
+      description: Home Page
+      tags:
+        - ERP-order
+      parameters:
+        - in: query
+          name: start
+          type: string
+          required: true
+        - in: query
+          name: end
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object

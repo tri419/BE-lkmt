@@ -3,11 +3,13 @@
 const { defaultsDeep } = require('lodash');
 const BaseRepository = require('./base_repository');
 const OrderDto = require('./models/Orders');
+const CustomerDto = require('./models/Customers');
 
 const { CollectionModel, OrderModel } = require('../models');
 const { logger } = require('../libs/logger');
 const { Utils } = require('../libs/utils');
 const moment = require('moment');
+const { format } = require('prettier');
 const defaultOpts = {};
 
 class OrderRepository extends BaseRepository {
@@ -284,6 +286,274 @@ class OrderRepository extends BaseRepository {
     ];
     const coll = await OrderDto.aggregate(pipe).sort({ createdAt: -1 });
     return coll;
+  }
+  async orderInDate() {
+    const now = new Date();
+    const dateNow = moment(now).format('YYYYMMDD');
+    const pipeNewOrder = [
+      {
+        $match: {
+          status: { $ne: 'cancelled' },
+        },
+      },
+      {
+        $set: {
+          date: { $dateToString: { format: '%Y%m%d', date: '$createdAt' } },
+        },
+      },
+      {
+        $match: {
+          date: dateNow,
+        },
+      },
+      {
+        $group: {
+          _id: dateNow,
+          NewOrder: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const NewOrder = await OrderDto.aggregate(pipeNewOrder);
+    const pipeCancelOrder = [
+      {
+        $match: {
+          status: 'cancelled',
+        },
+      },
+      {
+        $set: {
+          date: { $dateToString: { format: '%Y%m%d', date: '$createdAt' } },
+        },
+      },
+      {
+        $match: {
+          date: dateNow,
+        },
+      },
+      {
+        $group: {
+          _id: dateNow,
+          CancelOrder: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const CancelOrder = await OrderDto.aggregate(pipeCancelOrder);
+    const pipeTotalAmount = [
+      {
+        $match: {
+          status: 'completed',
+        },
+      },
+      {
+        $set: {
+          date: { $dateToString: { format: '%Y%m%d', date: '$createdAt' } },
+        },
+      },
+      {
+        $match: {
+          date: dateNow,
+        },
+      },
+      {
+        $group: {
+          _id: dateNow,
+          TotalAmount: { $sum: '$totalAmount.total' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const TotalAmount = await OrderDto.aggregate(pipeTotalAmount);
+    const pipeNewCustomer = [
+      {
+        $match: {
+          status: true,
+        },
+      },
+      {
+        $set: {
+          date: { $dateToString: { format: '%Y%m%d', date: '$createdAt' } },
+        },
+      },
+      {
+        $match: {
+          date: dateNow,
+        },
+      },
+      {
+        $group: {
+          _id: dateNow,
+          NewCustomer: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const NewCustomer = await CustomerDto.aggregate(pipeNewCustomer);
+    return {
+      newOrder: NewOrder[0] ? NewOrder[0].NewOrder : 0,
+      cancelOrder: CancelOrder[0] ? CancelOrder[0].CancelOrder : 0,
+      revenueOrder: TotalAmount[0] ? TotalAmount[0].TotalAmount : 0,
+      newCustomer: NewCustomer[0] ? NewCustomer[0].NewCustomer : 0,
+    };
+  }
+  async statusOrder() {
+    const pipe = [
+      {
+        $match: {
+          status: {
+            $in: [
+              'wait_for_confirmation',
+              'approved',
+              'confirmed',
+              'ready_to_ship',
+              'transporting',
+              'completed',
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$status',
+          status: { $first: '$status' },
+          total: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipe);
+    const output = coll.reduce(
+      (p, c) => {
+        if (c.status === 'wait_for_confirmation') {
+          p.wait_for_confirmation += c.total;
+        } else if (c.status === 'approved') {
+          p.approved += c.total;
+        } else if (c.status === 'confirmed') {
+          p.confirmed += c.total;
+        } else if (c.status === 'ready_to_ship') {
+          p.ready_to_ship += c.total;
+        } else if (c.status === 'transporting') {
+          p.transporting += c.total;
+        } else if (c.status === 'completed') {
+          p.completed += c.total;
+        }
+        p.numberOrder += c.total;
+        return p;
+      },
+      {
+        wait_for_confirmation: 0,
+        approved: 0,
+        confirmed: 0,
+        ready_to_ship: 0,
+        transporting: 0,
+        completed: 0,
+        numberOrder: 0,
+      },
+    );
+    return output;
+  }
+  async topProduct(data) {
+    const pipeline = [
+      {
+        $set: {
+          date: { $dateToString: { format: '%Y/%m/%d', date: '$createdAt' } },
+        },
+      },
+      {
+        $match: {
+          date: {
+            $gte: data.start,
+            $lte: data.end,
+          },
+        },
+      },
+      {
+        $match: {
+          status: 'completed',
+        },
+      },
+      {
+        $unwind: '$product',
+      },
+      {
+        $group: {
+          _id: '$product.productId',
+          uid: {
+            $first: '$product.productId',
+          },
+          numberOrders: {
+            $count: {},
+          },
+          numberProducts: {
+            $sum: '$product.number',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipeline).sort({
+      numberProducts: -1,
+    });
+    return coll;
+  }
+  async totalAmount(data) {
+    const pipeline = [
+      {
+        $set: {
+          date: { $dateToString: { format: '%Y/%m/%d', date: '$createdAt' } },
+        },
+      },
+      {
+        $match: {
+          date: {
+            $gte: data.start,
+            $lte: data.end,
+          },
+        },
+      },
+      {
+        $match: {
+          status: 'completed',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalAmount: { $sum: '$totalAmount.total' },
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipeline);
+    let total = 0;
+    for (let i = 0; i < coll.length; i++) {
+      total += coll[i].totalAmount;
+    }
+    return total;
   }
 }
 module.exports = OrderRepository;
