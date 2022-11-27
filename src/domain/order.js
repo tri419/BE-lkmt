@@ -287,8 +287,16 @@ class OrderService {
   async homePage(data) {
     const orderInDate = await this.repo.orderInDate();
     const statusOrder = await this.repo.statusOrder();
-    const topProduct = await this.repo.topProduct(data);
-    const totalAmount = await this.repo.totalAmount(data);
+    let topProduct = [];
+    let totalAmount = 0;
+    if (data.start == '' && data.end == '') {
+      topProduct = await this.repo.topProduct1();
+      totalAmount = await this.repo.totalAmount1();
+    } else {
+      topProduct = await this.repo.topProduct(data);
+      totalAmount = await this.repo.totalAmount(data);
+    }
+
     return {
       orderInDate,
       statusOrder,

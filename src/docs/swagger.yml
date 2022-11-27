@@ -1301,11 +1301,9 @@ paths:
         - in: query
           name: start
           type: string
-          required: true
         - in: query
           name: end
           type: string
-          required: true
       responses:
         '200':
           description: Pong
