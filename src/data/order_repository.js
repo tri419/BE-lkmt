@@ -555,5 +555,61 @@ class OrderRepository extends BaseRepository {
     }
     return total;
   }
+  async topProduct1() {
+    const pipeline = [
+      {
+        $match: {
+          status: 'completed',
+        },
+      },
+      {
+        $unwind: '$product',
+      },
+      {
+        $group: {
+          _id: '$product.productId',
+          uid: {
+            $first: '$product.productId',
+          },
+          numberOrders: {
+            $count: {},
+          },
+          numberProducts: {
+            $sum: '$product.number',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipeline).sort({
+      numberProducts: -1,
+    });
+    return coll;
+  }
+  async totalAmount1() {
+    const pipeline = [
+      {
+        $match: {
+          status: 'completed',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalAmount: { $sum: '$totalAmount.total' },
+        },
+      },
+    ];
+    const coll = await OrderDto.aggregate(pipeline);
+    let total = 0;
+    for (let i = 0; i < coll.length; i++) {
+      total += coll[i].totalAmount;
+    }
+    return total;
+  }
 }
 module.exports = OrderRepository;
