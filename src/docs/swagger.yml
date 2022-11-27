@@ -1253,6 +1253,26 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/momo:
+    post:
+      x-swagger-router-controller: order
+      operationId: momo
+      description: create momo
+      tags:
+        - ERP-order
+      parameters:
+        - in: body
+          name: data momo
+          description: Data momo
+          schema:
+            $ref: '#/definitions/momo'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /success:
     get:
       x-swagger-router-controller: order
@@ -1566,6 +1586,13 @@ definitions:
     properties:
       price:
         type: string
+  momo:
+    type: object
+    properties:
+      orderCode:
+        type: string
+      amount:
+        type: number
   readyToShipOrder:
     type: object
     properties:
