@@ -161,6 +161,14 @@ class Order extends Base {
     }
     return output;
   }
+  static momo(input) {
+    const output = {};
+    if (input != null) {
+      output.orderCode = Utils.getString(input.orderCode, '');
+      output.amount = Utils.getInteger(input.amount, 0);
+    }
+    return output;
+  }
   static readyToShip(input) {
     const output = {};
     if (input != null) {

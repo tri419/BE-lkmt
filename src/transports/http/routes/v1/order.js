@@ -1,6 +1,11 @@
 const { OrderModel } = require('../../../../models');
-const { orderService, cartService } = require('../../../../domain');
+const {
+  orderService,
+  cartService,
+  momoPaymentService,
+} = require('../../../../domain');
 const { loggerService } = require('../../../../libs/logger');
+
 const paypal = require('paypal-rest-sdk');
 /**
  * @typedef {import("express").Request} Request
@@ -242,6 +247,21 @@ module.exports = {
     try {
       const data = OrderModel.homePage(req.query);
       const output = await orderService.homePage(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  momo: async (req, res, next) => {
+    try {
+      const data = OrderModel.momo(req.body);
+      const output = await momoPaymentService.createPayment({
+        orderId: data.orderCode,
+        amount: data.amount,
+      });
       res.json({
         success: true,
         results: output,
