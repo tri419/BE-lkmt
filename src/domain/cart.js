@@ -128,5 +128,22 @@ class CartService {
     findCart.product = listProduct;
     return findCart;
   }
+  async deleteCart(customerId, uid) {
+    const findCart = await this.repo.findOne('customerId', customerId);
+    if (!findCart) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const ret = await this.repo.update(
+      { customerId: customerId },
+      {
+        $pull: {
+          product: { productId: uid },
+        },
+      },
+    );
+    return ret;
+  }
 }
 module.exports = CartService;

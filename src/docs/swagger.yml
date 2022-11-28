@@ -973,6 +973,24 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+    delete:
+      x-swagger-router-controller: cart
+      operationId: delete
+      description: update cart
+      tags:
+        - ERP-cart
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /cart/viewCart:
     get:
       x-swagger-router-controller: cart
