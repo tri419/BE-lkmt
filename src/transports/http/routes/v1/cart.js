@@ -55,4 +55,15 @@ module.exports = {
       next(error);
     }
   },
+  delete: async (req, res, next) => {
+    try {
+      const customerId = req.headers.customerId || req.headers.customerid;
+      const { value: uid } = req.swagger.params.uid;
+      const output = await cartService.deleteCart(customerId, uid);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {}
+  },
 };
