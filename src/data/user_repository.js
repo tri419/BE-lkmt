@@ -143,6 +143,17 @@ class UserRepository extends BaseRepository {
         },
       },
       {
+        $lookup: {
+          from: 'roles',
+          localField: 'roleId',
+          foreignField: 'uid',
+          as: 'role',
+        },
+      },
+      {
+        $unwind: '$role',
+      },
+      {
         $match: {
           code: !data.code
             ? { $regex: '', $options: 'i' }
@@ -158,6 +169,12 @@ class UserRepository extends BaseRepository {
       {
         $project: {
           _id: 0,
+          username: 1,
+          email: 1,
+          phone: 1,
+          roleId: '$role.name',
+          status: 1,
+          avatar: 1,
         },
       },
     ];
