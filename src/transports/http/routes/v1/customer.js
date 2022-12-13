@@ -1,5 +1,6 @@
 const { CustomerModel, CartModel } = require('../../../../models');
 const { customerService, cartService } = require('../../../../domain');
+const { CustomerValidate } = require('../../../../validate');
 const { loggerService } = require('../../../../libs/logger');
 
 /**
@@ -18,6 +19,7 @@ module.exports = {
    */
   create: async (req, res, next) => {
     try {
+      CustomerValidate.createCustomerValidate(req.body);
       const data = CustomerModel.fromRequest(req.body);
       const customer = await customerService.create(data);
       const dataCart = CartModel.create(data, customer.uid);
@@ -33,6 +35,7 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;
+      CustomerValidate.updateCustomerValidate(req.body);
       const data = CustomerModel.fromUpdateCustomer(req.body);
       const output = await customerService.updateCustomer({ uid, data });
       res.json({
