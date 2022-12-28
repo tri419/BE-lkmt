@@ -40,6 +40,7 @@ const customerService = new CustomerService(
   customerRepository,
   productRepository,
   orderRepository,
+  cartRepository,
   roleRepository,
   axios,
 );

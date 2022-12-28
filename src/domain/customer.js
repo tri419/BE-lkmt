@@ -4,6 +4,7 @@
  * @typedef {import("../data/customer_repository")} customerRepository
  * @typedef {import("../data/product_repository")} productRepository
  * @typedef {import("../data/order_repository")} orderRepository
+ * @typedef {import("../data/cart_repository")} cartRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
@@ -23,14 +24,16 @@ class CustomerService {
    * @param {customerRepository} repo
    * @param {productRepository} repoProduct
    * @param {orderRepository} repoOrder
+   * @param {cartRepository} repoCart
    */
-  constructor(opts, policy, repo, repoProduct, repoOrder) {
+  constructor(opts, policy, repo, repoProduct, repoOrder, repoCart) {
     /** @type {defaultOpts} */
     this.opts = defaultsDeep(opts, defaultOpts);
     this.policy = policy;
     this.repo = repo;
     this.repoProduct = repoProduct;
     this.repoOrder = repoOrder;
+    this.repoCart = repoCart;
   }
   async create(data) {
     const coll = await this.repo.findCustomer(
@@ -136,6 +139,8 @@ class CustomerService {
           'Tài khoản của bạn đang bị khóa. Hãy liên hệ với Admin để mở tài khoản.',
       });
     }
+    const cart = await this.repoCart.findOne('customerId', customer.uid);
+    customer.cartId = cart.uid;
     const token = await this.generateCode(customer);
     return { customer, token };
   }
