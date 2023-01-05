@@ -13,7 +13,11 @@ const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
 const JWT = require('jsonwebtoken');
-const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
+const {
+  compareTwoText,
+  hashText,
+  HashToText,
+} = require('../libs/bcrypt_helper');
 const defaultOpts = {};
 
 class UserService {
@@ -100,6 +104,7 @@ class UserService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
+    findUser.password = HashToText(findUser.password);
     return findUser;
   }
   async deleteUserById(uid) {
