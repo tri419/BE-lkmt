@@ -497,10 +497,24 @@ class OrderRepository extends BaseRepository {
         $unwind: '$product',
       },
       {
+        $lookup: {
+          from: 'products',
+          localField: 'product.productId',
+          foreignField: 'uid',
+          as: 'productname',
+        },
+      },
+      {
+        $unwind: '$productname',
+      },
+      {
         $group: {
           _id: '$product.productId',
           uid: {
             $first: '$product.productId',
+          },
+          name: {
+            $first: '$productname.name',
           },
           numberOrders: {
             $count: {},
@@ -566,10 +580,24 @@ class OrderRepository extends BaseRepository {
         $unwind: '$product',
       },
       {
+        $lookup: {
+          from: 'products',
+          localField: 'product.productId',
+          foreignField: 'uid',
+          as: 'productname',
+        },
+      },
+      {
+        $unwind: '$productname',
+      },
+      {
         $group: {
           _id: '$product.productId',
           uid: {
             $first: '$product.productId',
+          },
+          name: {
+            $first: '$productname.name',
           },
           numberOrders: {
             $count: {},
