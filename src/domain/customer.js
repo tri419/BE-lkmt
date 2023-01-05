@@ -12,7 +12,11 @@ const { ErrorModel } = require('../models');
 const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
 const moment = require('moment');
-const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
+const {
+  compareTwoText,
+  hashText,
+  HashToText,
+} = require('../libs/bcrypt_helper');
 const Customer = require('../models/customer');
 const JWT = require('jsonwebtoken');
 const defaultOpts = {};
@@ -92,6 +96,7 @@ class CustomerService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
+    findCustomer.password = HashToText(findCustomer.password);
     return findCustomer;
   }
   async deleteCustomerById(uid) {
