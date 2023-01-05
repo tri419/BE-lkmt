@@ -111,19 +111,21 @@ class CartService {
       });
     }
     const listProduct = [];
-    for (let i = 0; i < findCart.product.length; i++) {
-      const findProduct = await this.repoProduct.findOne(
-        'uid',
-        findCart.product[i].productId,
-      );
-      listProduct.push({
-        productId: findProduct.uid,
-        name: findProduct.name,
-        number: findCart.product[i].number,
-        image: findProduct.image,
-        price: findCart.product[i].price,
-        discount: findProduct.discount,
-      });
+    if (findCart.product.length > 0) {
+      for (let i = 0; i < findCart.product.length; i++) {
+        const findProduct = await this.repoProduct.findOne(
+          'uid',
+          findCart.product[i].productId,
+        );
+        listProduct.push({
+          productId: findProduct.uid,
+          name: findProduct.name,
+          number: findCart.product[i].number,
+          image: findProduct.image,
+          price: findCart.product[i].price,
+          discount: findProduct.discount,
+        });
+      }
     }
     findCart.product = listProduct;
     return findCart;
