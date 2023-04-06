@@ -1,11 +1,11 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
- * @typedef {import("../data/order_repository")} orderRepository
- * @typedef {import("../data/customer_repository")} customerRepository
- * @typedef {import("../data/product_repository")} productRepository
- * @typedef {import("../data/cart_repository")} cartRepository
- * @typedef {import("../data/user_repository")} userRepository
+ * @typedef {import("../data/orderRepository")} orderRepository
+ * @typedef {import("../data/customerRepository")} customerRepository
+ * @typedef {import("../data/productRepository")} productRepository
+ * @typedef {import("../data/cartRepository")} cartRepository
+ * @typedef {import("../data/userRepository")} userRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');

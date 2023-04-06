@@ -8,14 +8,14 @@ const roleModel = require('./models/Roles');
 const cartModel = require('./models/Carts');
 const orderModel = require('./models/Orders');
 
-const ProductRepository = require('./product_repository');
-const CustomerRepository = require('./customer_repository');
-const UserRepository = require('./user_repository');
-const ProductTypeRepository = require('./productType_repository');
-const RoleRepository = require('./role_repository');
-const BrandRepository = require('./brand_repository');
-const CartRepository = require('./cart_repository');
-const OrderRepository = require('./order_repository');
+const ProductRepository = require('./productRepository');
+const CustomerRepository = require('./customerRepository');
+const UserRepository = require('./userRepository');
+const ProductTypeRepository = require('./productTypeRepository');
+const RoleRepository = require('./roleRepository');
+const BrandRepository = require('./brandRepository');
+const CartRepository = require('./cartRepository');
+const OrderRepository = require('./orderRepository');
 module.exports = {
   productRepository: new ProductRepository({}),
   customerRepository: new CustomerRepository({}),

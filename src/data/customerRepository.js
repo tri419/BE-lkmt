@@ -1,80 +1,80 @@
 'use strict';
 
 const { defaultsDeep } = require('lodash');
-const BaseRepository = require('./base_repository');
-const ProductTypeDto = require('./models/ProductTypes');
+const BaseRepository = require('./baseRepository');
+const CustomerDto = require('./models/Customers');
 
-const { CollectionModel, ProductTypeModel } = require('../models');
+const { CollectionModel, CustomerModel } = require('../models');
+const { compareTwoText } = require('../libs/bcryptHelper');
 const { logger } = require('../libs/logger');
-const { Utils } = require('../libs/utils');
 
 const defaultOpts = {};
 
-class ProductTypeRepository extends BaseRepository {
+class CustomerRepository extends BaseRepository {
+  /**
+   * @param {*} opts
+   * @param {RedisClient} redis
+   */
+  constructor(opts, redis) {
+    super();
+    /** @type {defaultOpts} */
+    this.opts = defaultsDeep(opts, defaultOpts);
+    this.redis = redis;
+  }
   /**
    *
    * @param {*} query
    * @param {Number} limit
    * @param {Number} page
    * @param {Boolean} count with count number of records
-   * @returns {Promise<CollectionModel<ProductTypeModel>>}
+   * @returns {Promise<CollectionModel<CustomerModel>>}
    */
-  async findProductType(query = {}, limit = 10, page = 1, count = false) {
+  async findCustomer(query = {}, limit = 10, page = 1, count = false) {
     const coll = new CollectionModel();
     coll.page = page;
     coll.limit = limit;
     try {
-      const docs = await ProductTypeDto.find(query)
+      const docs = await CustomerDto.find(query)
         .limit(limit)
         .skip((page - 1) * limit)
         .sort({ createdAt: -1 });
       if (docs.length > 0) {
-        coll.data = docs.map((item) => ProductTypeModel.fromMongo(item));
+        coll.data = docs.map((item) => CustomerModel.fromMongo(item));
       }
-      coll.total = count ? await ProductTypeDto.count(query) : docs.length;
+      coll.total = count ? await CustomerDto.count(query) : docs.length;
     } catch (err) {
       logger.error(err, err.message);
     }
     return coll;
   }
   async findAllData(data) {
-    let coll = await ProductTypeDto.find({ ...data });
+    let coll = await CustomerDto.find({ ...data });
     if (coll.length > 0) {
-      coll = coll.map((item) => ProductTypeModel.fromMongo(item));
+      coll = coll.map((item) => CustomerModel.fromMongo(item));
     }
     return coll;
-  }
-  async create(data) {
-    if (data == null) {
-      return;
-    }
-    const doc = await ProductTypeDto.insertMany(data);
-    if (doc != null) {
-      return true;
-    }
   }
   async createOne(data) {
     if (data == null) {
       return;
     }
-    const doc = await new ProductTypeDto(data).save();
-    const inserted = ProductTypeModel.fromMongo(doc);
+    const doc = await new CustomerDto(data).save();
+    const inserted = CustomerModel.fromMongo(doc);
     return inserted;
   }
   async findOne(key, value) {
-    const coll = await ProductTypeDto.findOne({ [key]: value });
-    const inserted = ProductTypeModel.fromMongo(coll);
+    const coll = await CustomerDto.findOne({ [key]: value });
+    const inserted = CustomerModel.fromMongo(coll);
     return inserted;
   }
   async findData(data) {
-    const docs = await ProductTypeDto.find(data);
-    const coll = docs.map((item) => ProductTypeModel.fromMongo(item));
+    const docs = await CustomerDto.find(data);
+    const coll = docs.map((item) => CustomerModel.fromMongo(item));
     return coll;
   }
-
   async update(query = {}, update = {}) {
     try {
-      const coll = await ProductTypeDto.findOneAndUpdate(query, update, {
+      const coll = await CustomerDto.findOneAndUpdate(query, update, {
         new: true,
       });
       return coll;
@@ -84,7 +84,7 @@ class ProductTypeRepository extends BaseRepository {
   }
   async updateMany(query = {}, update = {}) {
     try {
-      const coll = await ProductTypeDto.updateMany(query, update, {
+      const coll = await CustomerDto.updateMany(query, update, {
         new: true,
       });
       return coll;
@@ -92,7 +92,7 @@ class ProductTypeRepository extends BaseRepository {
       logger.error(err, err.message);
     }
   }
-  async updateProductTypeById(msg) {
+  async updateCustomerById(msg) {
     const { uid, data } = msg;
     const coll = await this.update(
       { uid: uid },
@@ -100,17 +100,17 @@ class ProductTypeRepository extends BaseRepository {
         ...data,
       },
     );
-    const inserted = ProductTypeModel.fromMongo(coll);
+    const inserted = CustomerModel.fromMongo(coll);
     return inserted;
   }
   async delete(data) {
     if (data == null) {
       return;
     }
-    const coll = await ProductTypeDto.delete({ uid: data });
+    const coll = await CustomerDto.delete({ uid: data });
     return coll;
   }
-  async deleteProductTypeById(value) {
+  async deleteCustomerById(value) {
     const deleted = await this.delete(value);
     return deleted;
   }
@@ -119,8 +119,14 @@ class ProductTypeRepository extends BaseRepository {
     if (value == null) {
       return;
     }
-    const coll = await ProductTypeDto.delete({ [key]: { $in: value } });
+    const coll = await CustomerDto.delete({ [key]: { $in: value } });
     return coll;
+  }
+  async generateCode() {
+    const count = await CustomerDto.find();
+    const total = count.length + 1;
+    const number = ('0000' + total).slice(-4);
+    return `KH${number}`;
   }
   async search(data) {
     const paging = {
@@ -152,20 +158,15 @@ class ProductTypeRepository extends BaseRepository {
       {
         $project: {
           _id: 0,
-          uid: 1,
-          code: 1,
-          name: 1,
-          status: 1,
-          createdAt: 1,
         },
       },
     ];
-    const coll = await ProductTypeDto.aggregate(pipe)
+    const coll = await CustomerDto.aggregate(pipe)
       .sort({ createdAt: -1 })
       .skip((data.page - 1) * data.limit)
       .limit(data.limit);
 
-    const total = await ProductTypeDto.aggregate(pipe).count('code');
+    const total = await CustomerDto.aggregate(pipe).count('code');
     paging.total = total.length > 0 ? total[0].code : 0;
 
     if (coll.total === 0) {
@@ -173,25 +174,30 @@ class ProductTypeRepository extends BaseRepository {
     }
     return [coll, paging];
   }
-  async listProductType() {
-    const pipe = [
+  async comparePasswordLogin(data) {
+    const coll = await this.findCustomer(
       {
-        $match: { status: true },
+        // $or: [
+        //   { clientCode: { $regex: `^${username}$`, $options: 'i' } },
+        //   { email: { $regex: `^${username}$`, $options: 'i' } },
+        // ],
+        // ...role,
+        username: { $regex: `^${data.username}$`, $options: 'i' },
       },
-      {
-        $project: {
-          _id: 0,
-          uid: 1,
-          code: 1,
-          name: 1,
-          createdAt: 1,
-        },
-      },
-    ];
-    const coll = await ProductTypeDto.aggregate(pipe).sort({
-      createdAt: -1,
-    });
-    return coll;
+      1,
+      1,
+      false,
+    );
+    if (coll.total === 0) {
+      return null;
+    }
+    const customer = coll.data[0];
+    const passwordFind = customer.password;
+    if (!compareTwoText(data.password, passwordFind)) {
+      return null;
+    }
+    customer.password = undefined;
+    return customer;
   }
 }
-module.exports = ProductTypeRepository;
+module.exports = CustomerRepository;
