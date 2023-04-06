@@ -5,9 +5,8 @@ const BaseRepository = require('./baseRepository');
 const CustomerDto = require('./models/Customers');
 
 const { CollectionModel, CustomerModel } = require('../models');
-const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
+const { compareTwoText } = require('../libs/bcrypt_helper');
 const { logger } = require('../libs/logger');
-const { Utils } = require('../libs/utils');
 
 const defaultOpts = {};
 

@@ -7,9 +7,6 @@ const CustomerDto = require('./models/Customers');
 
 const { CollectionModel, OrderModel } = require('../models');
 const { logger } = require('../libs/logger');
-const { Utils } = require('../libs/utils');
-const moment = require('moment');
-const { format } = require('prettier');
 const defaultOpts = {};
 
 class OrderRepository extends BaseRepository {

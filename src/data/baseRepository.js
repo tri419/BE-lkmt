@@ -1,7 +1,4 @@
 'use strict';
-/**
- * @typedef {import('aws-sdk').SNS} SNS
- */
 import { ErrorModel } from '../models';
 import { DATABASE, VALIDATION } from '../constants/error';
 
@@ -12,7 +9,6 @@ class BaseRepository {
    */
   parseError(err) {
     if (err.sql) {
-      // https://github.com/mysqljs/mysql/blob/ad014c82b2cbaf47acae1cc39e5533d3cb6eb882/lib/protocol/constants/errors.js
       switch (err.code) {
         case 'ER_DUP_ENTRY':
           return ErrorModel.initWithParams({ ...DATABASE.DUPLICATE });
