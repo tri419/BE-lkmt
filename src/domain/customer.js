@@ -16,7 +16,7 @@ const {
   compareTwoText,
   hashText,
   HashToText,
-} = require('../libs/bcrypt_helper');
+} = require('../libs/bcryptHelper');
 const Customer = require('../models/customer');
 const JWT = require('jsonwebtoken');
 const defaultOpts = {};

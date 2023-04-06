@@ -17,7 +17,7 @@ const {
   compareTwoText,
   hashText,
   HashToText,
-} = require('../libs/bcrypt_helper');
+} = require('../libs/bcryptHelper');
 const defaultOpts = {};
 
 class UserService {

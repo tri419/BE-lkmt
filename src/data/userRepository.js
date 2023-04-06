@@ -5,7 +5,7 @@ const BaseRepository = require('./baseRepository');
 const UserDto = require('./models/Users');
 const { CollectionModel, UserModel } = require('../models');
 const { logger } = require('../libs/logger');
-const { compareTwoText } = require('../libs/bcrypt_helper');
+const { compareTwoText } = require('../libs/bcryptHelper');
 const defaultOpts = {};
 
 class UserRepository extends BaseRepository {
