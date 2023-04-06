@@ -1,6 +1,5 @@
 const { BrandModel } = require('../../../../models');
 const { brandService } = require('../../../../domain');
-const { loggerService } = require('../../../../libs/logger');
 
 /**
  * @typedef {import("express").Request} Request
@@ -65,20 +64,6 @@ module.exports = {
       next(error);
     }
   },
-  // CODINGGGG ------------------------
-  // status: async (req, res, next) => {
-  //   try {
-  //     const { value: uid } = req.swagger.params.uid;
-  //     const data = BrandModel.fromUpdateStatusBrand(req.body);
-  //     const output = await brandService.updateStatusBrand({ uid, data });
-  //     res.json({
-  //       success: true,
-  //       results: output,
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // },
   search: async (req, res, next) => {
     try {
       const data = BrandModel.searchBrand(req.body);

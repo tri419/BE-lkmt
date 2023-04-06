@@ -1,14 +1,9 @@
 'use strict';
 
-const { defaultsDeep } = require('lodash');
-const BaseRepository = require('./base_repository');
+const BaseRepository = require('./baseRepository');
 const RoleDto = require('./models/Roles');
-
 const { CollectionModel, RoleModel } = require('../models');
 const { logger } = require('../libs/logger');
-const { Utils } = require('../libs/utils');
-
-const defaultOpts = {};
 
 class RoleRepository extends BaseRepository {
   /**

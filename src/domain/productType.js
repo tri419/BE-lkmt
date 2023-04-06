@@ -1,8 +1,8 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
- * @typedef {import("../data/productType_repository")} productTypeRepository
- * @typedef {import("../data/product_repository")} productRepository
+ * @typedef {import("../data/productTypeRepository")} productTypeRepository
+ * @typedef {import("../data/productRepository")} productRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');

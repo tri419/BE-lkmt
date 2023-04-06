@@ -1,6 +1,5 @@
 const { ProductTypeModel } = require('../../../../models');
 const { productTypeService } = require('../../../../domain');
-const { loggerService } = require('../../../../libs/logger');
 
 /**
  * @typedef {import("express").Request} Request
@@ -28,6 +27,12 @@ module.exports = {
       next(error);
     }
   },
+  /**
+   * update product
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
   update: async (req, res, next) => {
     try {
       const { value: uid } = req.swagger.params.uid;

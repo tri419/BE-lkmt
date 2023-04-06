@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const { getDefaultDB } = require('../../infrastructures/mongoose');
-const { hashText } = require('../../libs/bcrypt_helper');
+const { hashText } = require('../../libs/bcryptHelper');
 //const Customer = require('../../models/customer');
 const schema = mongoose.Schema;
 

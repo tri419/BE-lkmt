@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
 const { getDefaultDB } = require('../../infrastructures/mongoose');
-const { hashText } = require('../../libs/bcrypt_helper');
+const { hashText } = require('../../libs/bcryptHelper');
 const schema = mongoose.Schema;
 
 const UserSchema = new schema(

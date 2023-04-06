@@ -1,11 +1,11 @@
 'use strict';
 /**
  * @typedef {import("./policy")} PolicyService
- * @typedef {import("../data/product_repository")} productRepository
- * @typedef {import("../data/customer_repository")} customerRepository
- * @typedef {import("../data/order_repository")} orderRepository
- * @typedef {import("../data/user_repository")} userRepository
- * @typedef {import("../data/role_repository")} roleRepository
+ * @typedef {import("../data/productRepository")} productRepository
+ * @typedef {import("../data/customerRepository")} customerRepository
+ * @typedef {import("../data/orderRepository")} orderRepository
+ * @typedef {import("../data/userRepository")} userRepository
+ * @typedef {import("../data/roleRepository")} roleRepository
  */
 const { defaultsDeep } = require('lodash');
 const { ulid } = require('ulid');
@@ -17,7 +17,7 @@ const {
   compareTwoText,
   hashText,
   HashToText,
-} = require('../libs/bcrypt_helper');
+} = require('../libs/bcryptHelper');
 const defaultOpts = {};
 
 class UserService {

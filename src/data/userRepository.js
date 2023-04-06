@@ -1,13 +1,11 @@
 'use strict';
 
 const { defaultsDeep } = require('lodash');
-const BaseRepository = require('./base_repository');
+const BaseRepository = require('./baseRepository');
 const UserDto = require('./models/Users');
-
 const { CollectionModel, UserModel } = require('../models');
 const { logger } = require('../libs/logger');
-const { Utils } = require('../libs/utils');
-const { compareTwoText, hashText } = require('../libs/bcrypt_helper');
+const { compareTwoText } = require('../libs/bcryptHelper');
 const defaultOpts = {};
 
 class UserRepository extends BaseRepository {
@@ -194,11 +192,6 @@ class UserRepository extends BaseRepository {
   async comparePasswordLogin(data) {
     const coll = await this.findUser(
       {
-        // $or: [
-        //   { clientCode: { $regex: `^${username}$`, $options: 'i' } },
-        //   { email: { $regex: `^${username}$`, $options: 'i' } },
-        // ],
-        // ...role,
         username: { $regex: `^${data.username}$`, $options: 'i' },
       },
       1,
