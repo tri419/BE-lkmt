@@ -1,7 +1,7 @@
 'use strict';
 
 const { defaultsDeep } = require('lodash');
-const BaseRepository = require('./base_repository');
+const BaseRepository = require('./baseRepository');
 const UserDto = require('./models/Users');
 
 const { CollectionModel, UserModel } = require('../models');

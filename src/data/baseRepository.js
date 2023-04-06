@@ -2,8 +2,8 @@
 /**
  * @typedef {import('aws-sdk').SNS} SNS
  */
-const { ErrorModel } = require('../models');
-const { DATABASE, VALIDATION } = require('../constants/error');
+import { ErrorModel } from '../models';
+import { DATABASE, VALIDATION } from '../constants/error';
 
 class BaseRepository {
   /**
@@ -62,4 +62,4 @@ class BaseRepository {
   }
 }
 
-module.exports = BaseRepository;
+export default BaseRepository;
