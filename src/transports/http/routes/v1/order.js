@@ -4,7 +4,6 @@ const {
   cartService,
   momoPaymentService,
 } = require('../../../../domain');
-const { loggerService } = require('../../../../libs/logger');
 
 const paypal = require('paypal-rest-sdk');
 /**

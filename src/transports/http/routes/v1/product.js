@@ -1,6 +1,5 @@
 const { ProductModel } = require('../../../../models');
 const { productService, customerService } = require('../../../../domain');
-const { loggerService } = require('../../../../libs/logger');
 
 /**
  * @typedef {import("express").Request} Request
