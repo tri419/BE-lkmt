@@ -165,19 +165,6 @@ class CustomerValidate {
     // }
   }
   static updateCustomerValidate(data) {
-    // if (data.code) {
-    //   if (data.code.length > 30) {
-    //     throw ErrorModel.initWithParams({
-    //       ...ERROR.VALIDATION.INVALID_REQUEST,
-    //       message: 'Mã khách hàng không quá 30 kí tự',
-    //     });
-    //   }
-    // } else {
-    //   throw ErrorModel.initWithParams({
-    //     ...ERROR.VALIDATION.INVALID_REQUEST,
-    //     message: 'Yêu cầu phải có mã khách hàng',
-    //   });
-    // }
     if (data.firstName) {
       if (data.firstName.length > 25) {
         throw ErrorModel.initWithParams({
@@ -322,38 +309,39 @@ class CustomerValidate {
         message: 'Email yêu cầu phải có',
       });
     }
-    if (data.street && data.province && data.district && data.ward) {
-      if (data.street.length > 200) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Địa chỉ đường người mua không quá 200 kí tự',
-        });
-      }
-      if (data.province.length > 50) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Địa chỉ phường người mua không quá 50 kí tự',
-        });
-      }
-      if (data.district.length > 50) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Địa chỉ quận người mua không quá 50 kí tự',
-        });
-      }
-      if (data.ward.length > 50) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Địa chỉ thành phố/tỉnh người mua không quá 50 kí tự',
-        });
-      }
-    } else {
-      throw ErrorModel.initWithParams({
-        ...ERROR.VALIDATION.INVALID_REQUEST,
-        message: 'Phải có địa chỉ người mua và phải đủ thông tin',
-      });
-    }
+    // if (data.street && data.province && data.district && data.ward) {
+    //   if (data.street.length > 200) {
+    //     throw ErrorModel.initWithParams({
+    //       ...ERROR.VALIDATION.INVALID_REQUEST,
+    //       message: 'Địa chỉ đường người mua không quá 200 kí tự',
+    //     });
+    //   }
+    //   if (data.province.length > 50) {
+    //     throw ErrorModel.initWithParams({
+    //       ...ERROR.VALIDATION.INVALID_REQUEST,
+    //       message: 'Địa chỉ phường người mua không quá 50 kí tự',
+    //     });
+    //   }
+    //   if (data.district.length > 50) {
+    //     throw ErrorModel.initWithParams({
+    //       ...ERROR.VALIDATION.INVALID_REQUEST,
+    //       message: 'Địa chỉ quận người mua không quá 50 kí tự',
+    //     });
+    //   }
+    //   if (data.ward.length > 50) {
+    //     throw ErrorModel.initWithParams({
+    //       ...ERROR.VALIDATION.INVALID_REQUEST,
+    //       message: 'Địa chỉ thành phố/tỉnh người mua không quá 50 kí tự',
+    //     });
+    //   }
+    // } else {
+    //   throw ErrorModel.initWithParams({
+    //     ...ERROR.VALIDATION.INVALID_REQUEST,
+    //     message: 'Phải có địa chỉ người mua và phải đủ thông tin',
+    //   });
+    // }
   }
+
   static updateShop(data) {
     if (data.firstName) {
       if (data.firstName.length > 25) {
@@ -411,21 +399,21 @@ class CustomerValidate {
         message: 'Yêu cầu phải có tên người mua',
       });
     }
-    if (data.taxCode) {
-      if (Utils.validateNumberInString(data.taxCode)) {
-        if (data.taxCode.length > 13 || data.taxCode.length < 10) {
-          throw ErrorModel.initWithParams({
-            ...ERROR.VALIDATION.INVALID_REQUEST,
-            message: 'Mã số thuế là 10 hoặc 13 chữ số',
-          });
-        }
-      } else {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Mã số thuế không hợp lệ',
-        });
-      }
-    }
+    // if (data.taxCode) {
+    //   if (Utils.validateNumberInString(data.taxCode)) {
+    //     if (data.taxCode.length > 13 || data.taxCode.length < 10) {
+    //       throw ErrorModel.initWithParams({
+    //         ...ERROR.VALIDATION.INVALID_REQUEST,
+    //         message: 'Mã số thuế là 10 hoặc 13 chữ số',
+    //       });
+    //     }
+    //   } else {
+    //     throw ErrorModel.initWithParams({
+    //       ...ERROR.VALIDATION.INVALID_REQUEST,
+    //       message: 'Mã số thuế không hợp lệ',
+    //     });
+    //   }
+    // }
     if (data.phone) {
       // if (data.phone.length > 12) {
       //   throw ErrorModel.initWithParams({

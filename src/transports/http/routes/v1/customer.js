@@ -107,4 +107,32 @@ module.exports = {
       next(error);
     }
   },
+  forgot_password: async (req, res, next) => {
+    try {
+      const data = CustomerModel.forgotPassword(req.body);
+      const email = await customerService.forgotPassword(data, req);
+      res.json({
+        success: true,
+        results: email,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  reset_password_token: async (req, res, next) => {
+    try {
+      const { value: token } = req.swagger.params.token;
+      const data = CustomerModel.fromPasswordToken(req.body);
+      const confirmPassword = await customerService.confirmPassword(
+        token,
+        data,
+      );
+      res.json({
+        success: true,
+        results: confirmPassword,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -61,6 +61,12 @@ const CustomerSchema = mongoose.Schema(
     avatar: {
       type: String,
     },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: String,
+    },
     address: [
       {
         street: {

@@ -484,6 +484,50 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /customer/reset-password:
+    post:
+      x-swagger-router-controller: customer
+      operationId: forgot_password
+      description: forgot password customer
+      tags:
+        - ERP-customer
+      parameters:
+        - in: body
+          name: email
+          description: Data email customer
+          schema:
+            $ref: '#/definitions/Email'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /customer/reset-password/{token}:
+    post:
+      x-swagger-router-controller: customer
+      operationId: reset_password_token
+      description: forgot password token customer
+      tags:
+        - ERP-customer
+      parameters:
+        - name: token
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: customer
+          description: Data customer
+          schema:
+            $ref: '#/definitions/Password'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /brand:
     post:
       x-swagger-router-controller: brand
@@ -1477,6 +1521,16 @@ definitions:
               type: string
             status:
               type: boolean
+  Email:
+    type: object
+    properties:
+      email:
+        type: string
+  Password:
+    type: object
+    properties:
+      password:
+        type: string
   Brand:
     type: object
     properties:

@@ -66,6 +66,8 @@ class Customer extends Base {
       output.email = input.email;
       output.status = input.status;
       output.avatar = input.avatar;
+      output.resetPasswordToken = input.resetPasswordToken;
+      output.resetPasswordExpires = input.resetPasswordExpires;
       output.address = input.address;
       output.createdAt = input.createdAt;
       output.updatedAt = input.updatedAt;
@@ -89,11 +91,16 @@ class Customer extends Base {
       output.firstName = Utils.getString(input.firstName, '');
       output.lastName = Utils.getString(input.lastName, '');
       output.dateOfBirth = Utils.getDateFromString(input.dateOfBirth);
-      output.sex = Utils.getString(input.sex, '');
+      output.sex = Utils.getString(input.sex, 'Male');
       output.phone = Utils.getString(input.phone, '');
       output.email = Utils.getString(input.email, '');
       output.status = Utils.getBoolean(input.status, true);
       output.avatar = Utils.getString(input.avatar, '');
+      output.resetPasswordToken = Utils.getString(input.resetPasswordToken, '');
+      output.resetPasswordExpires = Utils.getString(
+        input.resetPasswordToken,
+        '',
+      );
       output.address = [
         {
           street: Utils.getString(input.street, ''),
@@ -124,10 +131,10 @@ class Customer extends Base {
       output.firstName = Utils.getString(input.firstName, '');
       output.lastName = Utils.getString(input.lastName, '');
       output.dateOfBirth = Utils.getDateFromString(input.dateOfBirth);
-      output.sex = Utils.getString(input.sex, '');
+      output.sex = Utils.getString(input.sex, 'Male');
       output.phone = Utils.getString(input.phone, '');
       output.email = Utils.getString(input.email, '');
-      output.status = Utils.getBoolean(input.status, false);
+      output.status = Utils.getBoolean(input.status, true);
       output.avatar = Utils.getString(input.avatar, '');
       output.address = [
         {
@@ -183,6 +190,23 @@ class Customer extends Base {
       );
     }
     output.username = output.username.trim().replace(/\s+/g, '');
+    return output;
+  }
+  static forgotPassword(input) {
+    const output = {};
+    if (input != null) {
+      output.email = Utils.getString(input.email, '');
+      output.includedFields = Utils.extractIncludeAttributes(
+        input.includedFields,
+      );
+    }
+    return output;
+  }
+  static fromPasswordToken(input) {
+    const output = {};
+    if (input != null) {
+      output.password = Utils.getString(input.password, '');
+    }
     return output;
   }
 }

@@ -19,6 +19,20 @@ const {
 } = require('../libs/bcrypt_helper');
 const Customer = require('../models/customer');
 const JWT = require('jsonwebtoken');
+
+const cloudinary = require('cloudinary').v2;
+
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'tri12420011@gmail.com',
+    pass: 'occhoisreal1',
+  },
+});
+
 const defaultOpts = {};
 class CustomerService {
   /**
@@ -54,6 +68,14 @@ class CustomerService {
         message: 'Tên đăng nhập đã tồn tại.',
       });
     }
+    // cloudinary.uploader.upload(data.files.avatar.path, function(error, result) {
+    //   if (error) {
+    //     console.log('Error uploading avatar: ', error);
+    //     res.status(500).send('Error uploading avatar');
+    //   } else {
+    //     console.log('Avatar uploaded successfully: ', result.secure_url);
+    //     data.avatar = result.secure_url;
+    //   }});
     data.code = await this.repo.generateCode();
     data.uid = ulid();
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
@@ -174,6 +196,64 @@ class CustomerService {
       req.customer = customer.uid;
     } catch (error) {
       res.status(401).send({ error: 'Not authorized to access this resource' });
+    }
+  }
+  async forgotPassword(data, req) {
+    const findEmail = await this.repo.findOne('email', data.email);
+    if (!findEmail) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Chưa có email nào được tìm thấy',
+      });
+    }
+    const token = crypto.randomBytes(20).toString('hex');
+    // findEmail.resetPasswordToken = token;
+    // findEmail.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
+
+    const msg = {
+      uid: findEmail.uid,
+      data: {
+        resetPasswordToken: token,
+        resetPasswordExpires: Date.now() + 3600000,
+      },
+    };
+    const output = await this.repo.updateCustomerById(msg);
+    const mailOptions = {
+      from: 'tri12420011@gmail.com',
+      to: data.email,
+      subject: 'Reset your password',
+      text: `Please click the link below to reset your password:\n\n${req.headers.origin}/reset-password/${token}`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(`Email sent: ${info.response}`);
+      }
+    });
+    return mailOptions;
+  }
+  async confirmPassword(token, data) {
+    const user = await this.repo.findOne('resetPasswordToken', token);
+    if (!user) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Mã xác thực không hợp chính xác',
+      });
+    }
+    const msg = {
+      uid: user.uid,
+      data: {
+        password: hashText(data.password),
+        resetPasswordToken: '',
+        resetPasswordExpires: '',
+      },
+    };
+    try {
+      const output = await this.repo.updateCustomerById(msg);
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }
