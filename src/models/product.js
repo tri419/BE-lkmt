@@ -124,6 +124,9 @@ class Product extends Base {
     output.productType = !input.productType
       ? null
       : Utils.tvkd(input.productType.trim().replace(/\s\s+/g, ' '));
+    output.brand = !input.brand
+      ? null
+      : Utils.tvkd(input.brand.trim().replace(/\s\s+/g, ' '));
     output.status = !input.status ? null : input.status.trim();
     output.limit = input.limit || '10';
     output.limit = Number.parseInt(output.limit, 10);

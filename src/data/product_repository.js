@@ -174,6 +174,9 @@ class ProductRepository extends BaseRepository {
           'productType.nameUnsigned': !data.productType
             ? { $regex: '', $options: 'i' }
             : { $regex: data.productType.toLowerCase(), $options: 'i' },
+          'brand.nameUnsigned': !data.brand
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.brand.toLowerCase(), $options: 'i' },
           status_: !data.status
             ? { $regex: '', $options: 'i' }
             : { $regex: data.status, $options: 'i' },
