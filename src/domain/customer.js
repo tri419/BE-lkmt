@@ -92,12 +92,14 @@ class CustomerService {
       1,
       false,
     );
-    if (coll.data[0].uid !== uid) {
-      if (coll.total > 0) {
-        throw ErrorModel.initWithParams({
-          ...ERROR.VALIDATION.INVALID_REQUEST,
-          message: 'Tên đăng nhập đã tồn tại.',
-        });
+    if (coll.data.length > 0) {
+      if (coll.data[0].uid !== uid) {
+        if (coll.total > 0) {
+          throw ErrorModel.initWithParams({
+            ...ERROR.VALIDATION.INVALID_REQUEST,
+            message: 'Tên đăng nhập đã tồn tại.',
+          });
+        }
       }
     }
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
@@ -255,6 +257,17 @@ class CustomerService {
     } catch (error) {
       return false;
     }
+  }
+  async updateAddressCustomer(msg) {
+    const { uid, data } = msg;
+    const findCustomer = await this.repo.findOne('uid', uid);
+    if (!findCustomer) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const output = await this.repo.updateCustomerById(msg);
+    return output;
   }
 }
 module.exports = CustomerService;
