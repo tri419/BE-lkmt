@@ -103,7 +103,7 @@ class CustomerService {
       }
     }
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
-    data.password = hashText(data.password);
+    //sdata.password = hashText(data.password);
     const findCustomer = await this.repo.findOne('uid', uid);
     if (!findCustomer) {
       throw ErrorModel.initWithParams({

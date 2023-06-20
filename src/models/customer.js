@@ -127,7 +127,6 @@ class Customer extends Base {
       output.name = Utils.getString(input.firstName + ' ' + input.lastName, '');
       output.nameUnsigned = Utils.getString(Utils.tvkd(output.name), '');
       output.username = Utils.getString(input.username, '');
-      output.password = Utils.getString(input.password, '');
       output.firstName = Utils.getString(input.firstName, '');
       output.lastName = Utils.getString(input.lastName, '');
       output.dateOfBirth = Utils.getDateFromString(input.dateOfBirth);
@@ -136,15 +135,6 @@ class Customer extends Base {
       output.email = Utils.getString(input.email, '');
       output.status = Utils.getBoolean(input.status, true);
       output.avatar = Utils.getString(input.avatar, '');
-      // output.address = [
-      //   {
-      //     street: Utils.getString(input.street, ''),
-      //     province: Utils.getString(input.province, ''),
-      //     district: Utils.getString(input.district, ''),
-      //     ward: Utils.getString(input.ward, ''),
-      //     status: true,
-      //   },
-      // ];
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
       );
