@@ -1555,9 +1555,6 @@ definitions:
       username:
         type: string
         example: caotri1242001
-      password:
-        type: string
-        example: caotri1242001
       firstName:
         type: string
         example: Long
@@ -1583,21 +1580,6 @@ definitions:
       avatar:
         type: string
         example: 'dsfdsaf.jpg'
-      address:
-        type: array
-        items:
-          type: object
-          properties:
-            street:
-              type: string
-            province:
-              type: string
-            district:
-              type: string
-            ward:
-              type: string
-            status:
-              type: boolean
   Address:
     type: object
     properties:
