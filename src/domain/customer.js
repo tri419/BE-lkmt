@@ -78,7 +78,7 @@ class CustomerService {
     //   }});
     data.code = await this.repo.generateCode();
     data.uid = ulid();
-    data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
+    data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('DD/MM/YYYY');
     const output = await this.repo.createOne(data);
     return output;
   }
@@ -102,7 +102,7 @@ class CustomerService {
         }
       }
     }
-    data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('YYYY/MM/DD');
+    data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('DD/MM/YYYY');
     //sdata.password = hashText(data.password);
     const findCustomer = await this.repo.findOne('uid', uid);
     if (!findCustomer) {
