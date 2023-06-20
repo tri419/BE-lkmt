@@ -400,7 +400,7 @@ paths:
           name: customer
           description: Data customer
           schema:
-            $ref: '#/definitions/Customer'
+            $ref: '#/definitions/UpdateCustomer'
       responses:
         '200':
           description: Pong
@@ -461,6 +461,30 @@ paths:
           description: Data customer
           schema:
             $ref: '#/definitions/Status'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /customer/address/{uid}:
+    put:
+      x-swagger-router-controller: customer
+      operationId: address
+      description: Update address customer by id
+      tags:
+        - ERP-customer
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: addressCustomer
+          description: Data address customer
+          schema:
+            $ref: '#/definitions/Address'
       responses:
         '200':
           description: Pong
@@ -1510,6 +1534,73 @@ definitions:
       avatar:
         type: string
         example: 'dsfdsaf.jpg'
+      address:
+        type: array
+        items:
+          type: object
+          properties:
+            street:
+              type: string
+            province:
+              type: string
+            district:
+              type: string
+            ward:
+              type: string
+            status:
+              type: boolean
+  UpdateCustomer:
+    type: object
+    properties:
+      username:
+        type: string
+        example: caotri1242001
+      password:
+        type: string
+        example: caotri1242001
+      firstName:
+        type: string
+        example: Long
+      lastName:
+        type: string
+        example: Luong
+      dateOfBirth:
+        type: string
+        example: 2021-08-27T07:11:10.826Z
+        description: Ngay sinh
+      sex:
+        type: string
+        example: male
+      phone:
+        type: string
+        example: 0393506999
+      email:
+        type: string
+        example: caotri1242001@gmail.com
+      status:
+        type: boolean
+        example: true
+      avatar:
+        type: string
+        example: 'dsfdsaf.jpg'
+      address:
+        type: array
+        items:
+          type: object
+          properties:
+            street:
+              type: string
+            province:
+              type: string
+            district:
+              type: string
+            ward:
+              type: string
+            status:
+              type: boolean
+  Address:
+    type: object
+    properties:
       address:
         type: array
         items:

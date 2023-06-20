@@ -135,4 +135,18 @@ module.exports = {
       next(error);
     }
   },
+  address: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      CustomerValidate.updateAddress(req.body);
+      const data = CustomerModel.fromAddress(req.body);
+      const output = await customerService.updateAddressCustomer({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

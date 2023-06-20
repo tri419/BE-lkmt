@@ -136,15 +136,15 @@ class Customer extends Base {
       output.email = Utils.getString(input.email, '');
       output.status = Utils.getBoolean(input.status, true);
       output.avatar = Utils.getString(input.avatar, '');
-      output.address = [
-        {
-          street: Utils.getString(input.street, ''),
-          province: Utils.getString(input.province, ''),
-          district: Utils.getString(input.district, ''),
-          ward: Utils.getString(input.ward, ''),
-          status: true,
-        },
-      ];
+      // output.address = [
+      //   {
+      //     street: Utils.getString(input.street, ''),
+      //     province: Utils.getString(input.province, ''),
+      //     district: Utils.getString(input.district, ''),
+      //     ward: Utils.getString(input.ward, ''),
+      //     status: true,
+      //   },
+      // ];
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
       );
@@ -206,6 +206,16 @@ class Customer extends Base {
     const output = {};
     if (input != null) {
       output.password = Utils.getString(input.password, '');
+    }
+    return output;
+  }
+  static fromAddress(input) {
+    const output = {};
+    if (input != null) {
+      output.address = Utils.getArray(input.address, []);
+      output.includedFields = Utils.extractIncludeAttributes(
+        input.includedFields,
+      );
     }
     return output;
   }
