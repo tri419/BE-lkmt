@@ -79,7 +79,7 @@ module.exports = {
   },
   search: async (req, res, next) => {
     try {
-      await customerService.auth(req, res, next);
+      //await customerService.auth(req, res, next);
       const data = ProductModel.searchProduct(req.query);
       const output = await productService.searchProduct(data);
       res.json({
