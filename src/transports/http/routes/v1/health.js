@@ -9,6 +9,8 @@ const { ErrorModel } = require('../../../../models');
 const { ERROR } = require('../../../../constants');
 const { logger } = require('../../../../libs/logger');
 
+const { uploadService } = require('../../../../domain');
+
 module.exports = {
   /**
    * @param {Request} req
@@ -40,6 +42,17 @@ module.exports = {
         totalMem: os.totalmem(),
         freeMem: os.freemem(),
         loadAvg: os.loadavg(),
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+  uploadImage: async (req, res, next) => {
+    try {
+      const result = await uploadService.uploadFile(req.files);
+      res.json({
+        success: true,
+        result: result,
       });
     } catch (err) {
       next(err);

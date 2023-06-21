@@ -1421,6 +1421,28 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /upload/image:
+    post:
+      x-swagger-router-controller: health
+      operationId: uploadImage
+      description: Upload Image
+      tags:
+        - ERP-Upload
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          required: true
+          type: file
+          description: The file image to upload.
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
 definitions:
   Pong:
     type: object

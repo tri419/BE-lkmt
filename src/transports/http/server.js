@@ -168,7 +168,6 @@ class HttpServer {
         });
       }
     });
-
     return this.app;
   }
   /**
