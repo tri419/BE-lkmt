@@ -24,14 +24,21 @@ const cloudinary = require('cloudinary').v2;
 
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'tri12420011@gmail.com',
-    pass: 'occhoisreal1',
-  },
+const { OAuth2Client } = require('google-auth-library');
+const myOAuth2Client = new OAuth2Client(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+);
+myOAuth2Client.setCredentials({
+  refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
 });
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'tri12420011@gmail.com',
+//     pass: 'occhoisreal1',
+//   },
+// });
 
 const defaultOpts = {};
 class CustomerService {
@@ -220,11 +227,24 @@ class CustomerService {
       },
     };
     const output = await this.repo.updateCustomerById(msg);
+    const myAccessTokenObject = await myOAuth2Client.getAccessToken();
+    const myAccessToken = myAccessTokenObject?.token;
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: 'caotri1242001@gmail.com',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
+        accessToken: myAccessToken,
+      },
+    });
     const mailOptions = {
-      from: 'tri12420011@gmail.com',
+      from: 'caotri1242001@gmail.com',
       to: data.email,
       subject: 'Reset your password',
-      text: `Please click the link below to reset your password:\n\n${req.headers.origin}/reset-password/${token}`,
+      text: `Please click the link below to reset your password:\n\n${token}`,
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {

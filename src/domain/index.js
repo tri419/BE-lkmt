@@ -20,6 +20,7 @@ const UserService = require('./user');
 const CartService = require('./cart');
 const OrderService = require('./order');
 const MomoPaymentService = require('./momo');
+const UploadService = require('./upload');
 const { redisClient, axios } = require('../infrastructures');
 
 const policyService = new PolicyService({}, redisClient);
@@ -86,6 +87,7 @@ const orderService = new OrderService(
   productRepository,
 );
 const momoPaymentService = new MomoPaymentService({});
+const uploadService = new UploadService({});
 module.exports = {
   productService,
   customerService,
@@ -96,4 +98,5 @@ module.exports = {
   cartService,
   orderService,
   momoPaymentService,
+  uploadService,
 };
