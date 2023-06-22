@@ -149,4 +149,18 @@ module.exports = {
       next(error);
     }
   },
+  changePassword: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      CustomerValidate.checkChangePassword(req.body);
+      const data = CustomerModel.changePassword(req.body);
+      const output = await customerService.changePassword(uid, data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -556,6 +556,32 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+
+  /customer/change-password/{uid}:
+    put:
+      x-swagger-router-controller: customer
+      operationId: changePassword
+      description: Change password customer
+      tags:
+        - ERP-customer
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: customer
+          description: Data customer
+          schema:
+            $ref: '#/definitions/ChangePassword'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+
   /brand:
     post:
       x-swagger-router-controller: brand
@@ -1630,6 +1656,16 @@ definitions:
     properties:
       password:
         type: string
+  ChangePassword:
+    type: object
+    properties:
+      oldPassword:
+        type: string
+      newPassword:
+        type: string
+      rePassword:
+        type: string
+
   Brand:
     type: object
     properties:
