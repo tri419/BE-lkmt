@@ -32,13 +32,6 @@ const myOAuth2Client = new OAuth2Client(
 myOAuth2Client.setCredentials({
   refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
 });
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'tri12420011@gmail.com',
-//     pass: 'occhoisreal1',
-//   },
-// });
 
 const defaultOpts = {};
 class CustomerService {
@@ -75,14 +68,6 @@ class CustomerService {
         message: 'Tên đăng nhập đã tồn tại.',
       });
     }
-    // cloudinary.uploader.upload(data.files.avatar.path, function(error, result) {
-    //   if (error) {
-    //     console.log('Error uploading avatar: ', error);
-    //     res.status(500).send('Error uploading avatar');
-    //   } else {
-    //     console.log('Avatar uploaded successfully: ', result.secure_url);
-    //     data.avatar = result.secure_url;
-    //   }});
     data.code = await this.repo.generateCode();
     data.uid = ulid();
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('DD/MM/YYYY');
@@ -286,6 +271,37 @@ class CustomerService {
         ...ERROR.VALIDATION.NOT_FOUND,
       });
     }
+    const output = await this.repo.updateCustomerById(msg);
+    return output;
+  }
+  async changePassword(uid, data) {
+    const findCustomer = await this.repo.findOne('uid', uid);
+    if (!findCustomer) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Không tìm thấy khách hàng này',
+      });
+    }
+    const currentPassword = HashToText(findCustomer.password);
+    if (currentPassword !== data.oldPassword) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Mật khẩu hiện tại không chính xác',
+      });
+    }
+    if (data.newPassword !== data.rePassword) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Mật khẩu mới và nhập lại mật khẩu không giống nhau',
+      });
+    }
+
+    const msg = {
+      uid: uid,
+      data: {
+        password: hashText(data.newPassword),
+      },
+    };
     const output = await this.repo.updateCustomerById(msg);
     return output;
   }

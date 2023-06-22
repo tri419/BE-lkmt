@@ -357,6 +357,21 @@ class CustomerValidate {
       });
     }
   }
+  static checkChangePassword(data) {
+    if (data.newPassword) {
+      if (data.newPassword.length < 5 || data.newPassword.length > 20) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Mật khẩu phải từ 5 đến 20 kí tự',
+        });
+      }
+    } else {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Yêu cầu nhập mật khẩu mới',
+      });
+    }
+  }
 }
 
 module.exports = CustomerValidate;

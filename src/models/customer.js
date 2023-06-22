@@ -209,5 +209,17 @@ class Customer extends Base {
     }
     return output;
   }
+  static changePassword(input) {
+    const output = {};
+    if (input != null) {
+      output.oldPassword = Utils.getString(input.oldPassword, '');
+      output.newPassword = Utils.getString(input.newPassword, '');
+      output.rePassword = Utils.getString(input.rePassword, '');
+      output.includedFields = Utils.extractIncludeAttributes(
+        input.includedFields,
+      );
+    }
+    return output;
+  }
 }
 module.exports = Customer;
