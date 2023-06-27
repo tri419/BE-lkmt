@@ -1419,6 +1419,11 @@ paths:
       description: history Order Of Customer
       tags:
         - ERP-order
+      parameters:
+        - in: query
+          name: status
+          type: string
+          required: false
       responses:
         '200':
           description: Pong

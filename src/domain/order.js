@@ -246,8 +246,24 @@ class OrderService {
     const output = await this.repo.listOrderShipper(userId);
     return output;
   }
-  async historyOrder(customerId) {
-    const output = await this.repo.historyOrder(customerId);
+  async historyOrder(customerId, data) {
+    const status = [
+      'wait_for_confirmation',
+      'approved',
+      'ready_to_ship',
+      'transporting',
+      'completed',
+      'cancelled',
+    ];
+    if (data.status) {
+      if (status.indexOf(data.status) == -1) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Trạng thái đơn hàng không hợp lệ',
+        });
+      }
+    }
+    const output = await this.repo.historyOrder(customerId, data);
     for (let i = 0; i < output.length; i++) {
       const product = [];
       for (let index = 0; index < output[i].product.length; index++) {

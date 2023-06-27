@@ -196,7 +196,9 @@ module.exports = {
   historyOrder: async (req, res, next) => {
     try {
       const customerId = req.headers.customerId || req.headers.customerid;
-      const output = await orderService.historyOrder(customerId);
+      const data = OrderModel.historyOrder(req.query);
+      const output = await orderService.historyOrder(customerId, data);
+
       res.json({
         success: true,
         results: output,

@@ -200,7 +200,7 @@ class CustomerService {
         message: 'Chưa có email nào được tìm thấy',
       });
     }
-    const token = crypto.randomBytes(20).toString('hex');
+    const token = crypto.randomBytes(6).toString('hex');
     // findEmail.resetPasswordToken = token;
     // findEmail.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
 
@@ -229,7 +229,7 @@ class CustomerService {
       from: 'caotri1242001@gmail.com',
       to: data.email,
       subject: 'Reset your password',
-      text: `Please click the link below to reset your password:\n\n${token}`,
+      text: `Mã xác thực để lấy lại mật khẩu của bạn là:\n\n${token}`,
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
