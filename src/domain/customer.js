@@ -68,6 +68,13 @@ class CustomerService {
         message: 'Tên đăng nhập đã tồn tại.',
       });
     }
+    const checkEmail = await this.repo.findOne('email', data.email);
+    if (checkEmail) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Email người dùng đã tồn tại.',
+      });
+    }
     data.code = await this.repo.generateCode();
     data.uid = ulid();
     data.dateOfBirth = moment(new Date(data.dateOfBirth)).format('DD/MM/YYYY');
@@ -90,6 +97,22 @@ class CustomerService {
           throw ErrorModel.initWithParams({
             ...ERROR.VALIDATION.INVALID_REQUEST,
             message: 'Tên đăng nhập đã tồn tại.',
+          });
+        }
+      }
+    }
+    const checkEmail = await this.repo.findCustomer(
+      { email: data.email },
+      1,
+      1,
+      false,
+    );
+    if (checkEmail.data.length > 0) {
+      if (checkEmail.data[0].uid !== uid) {
+        if (checkEmail.total > 0) {
+          throw ErrorModel.initWithParams({
+            ...ERROR.VALIDATION.INVALID_REQUEST,
+            message: 'Email thay đổi đã tồn tại.',
           });
         }
       }
