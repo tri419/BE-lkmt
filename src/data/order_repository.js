@@ -262,11 +262,14 @@ class OrderRepository extends BaseRepository {
     const coll = await OrderDto.aggregate(pipe).sort({ createdAt: -1 });
     return coll;
   }
-  async historyOrder(customerId) {
+  async historyOrder(customerId, data) {
     const pipe = [
       {
         $match: {
           customerId: customerId,
+          status: !data.status
+            ? { $regex: '', $options: 'i' }
+            : { $regex: data.status, $options: 'i' },
         },
       },
       {

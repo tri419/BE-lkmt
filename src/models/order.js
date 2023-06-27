@@ -275,5 +275,12 @@ class Order extends Base {
     }
     return output;
   }
+  static historyOrder(input) {
+    const output = {};
+    if (input) {
+      output.status = !input.status ? null : input.status.trim();
+    }
+    return output;
+  }
 }
 module.exports = Order;
