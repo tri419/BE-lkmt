@@ -72,7 +72,12 @@ class Order extends Base {
       output.typePayment = input.typePayment;
       output.phone = input.phone;
       output.email = input.email;
-      output.address = input.address;
+      output.address = {
+        street: input.address.street,
+        province: input.address.province,
+        district: input.address.district,
+        ward: input.address.ward,
+      };
       output.date = input.date;
       output.totalAmount = {
         total: input.totalAmount.total,
