@@ -100,6 +100,22 @@ class OrderService {
     return output;
   }
   async searchOrder(data) {
+    const status = [
+      'wait_for_confirmation',
+      'approved',
+      'ready_to_ship',
+      'transporting',
+      'completed',
+      'cancelled',
+    ];
+    if (data.status) {
+      if (status.indexOf(data.status) == -1) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Trạng thái đơn hàng không hợp lệ',
+        });
+      }
+    }
     const output = await this.repo.search(data);
     return output;
   }
