@@ -1369,6 +1369,40 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/VN-PAY:
+    post:
+      x-swagger-router-controller: order
+      operationId: create_VN_PAY
+      description: create VN PAY
+      tags:
+        - ERP-order
+      parameters:
+        - in: body
+          name: price VN PAY
+          description: Data VN PAY
+          schema:
+            $ref: '#/definitions/VnPay'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/return:
+    get:
+      x-swagger-router-controller: order
+      operationId: return_VN_PAY
+      description: create VN PAY
+      tags:
+        - ERP-order
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /order/momo:
     post:
       x-swagger-router-controller: order
@@ -1797,6 +1831,13 @@ definitions:
     type: object
     properties:
       price:
+        type: string
+  VnPay:
+    type: object
+    properties:
+      price:
+        type: string
+      orderCode:
         type: string
   momo:
     type: object

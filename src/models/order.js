@@ -287,5 +287,13 @@ class Order extends Base {
     }
     return output;
   }
+  static VnPay(input) {
+    const output = {};
+    if (input != null) {
+      output.price = Utils.getInteger(input.price, 0);
+      output.orderCode = Utils.getString(input.orderCode, '');
+    }
+    return output;
+  }
 }
 module.exports = Order;

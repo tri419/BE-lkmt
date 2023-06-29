@@ -14,6 +14,9 @@ const { ERROR, ROUTE, LOGS } = require('../constants');
 const { Utils } = require('../libs/utils');
 const moment = require('moment');
 const paypal = require('paypal-rest-sdk');
+//const config1 = require('config');
+const querystring = require('qs');
+const crypto = require('crypto');
 const defaultOpts = {};
 class OrderService {
   /**
@@ -111,12 +114,28 @@ class OrderService {
       'uid',
       findOrder.customerId,
     );
+    const listProduct = [];
+    if (findOrder.product.length > 0) {
+      for (let i = 0; i < findOrder.product.length; i++) {
+        const findProduct = await this.repoProduct.findOne(
+          'uid',
+          findOrder.product[i].productId,
+        );
+        listProduct.push({
+          productId: findProduct.uid,
+          name: findProduct.name,
+          number: findOrder.product[i].number,
+          image: findProduct.image[0],
+          price: findOrder.product[i].price,
+        });
+      }
+    }
     const output = {
       uid: uid,
       orderCode: findOrder.orderCode,
       customerId: findOrder.customerId,
       customerName: findCustomer.name,
-      product: findOrder.product,
+      product: listProduct,
       status: findOrder.status,
       typePayment: findOrder.typePayment,
       phone: findOrder.phone,
@@ -319,6 +338,93 @@ class OrderService {
       topProduct,
       totalAmount,
     };
+  }
+  async sortObject(obj) {
+    const sorted = {};
+    const str = [];
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        str.push(encodeURIComponent(key));
+      }
+    }
+    str.sort();
+    for (key = 0; key < str.length; key++) {
+      sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
+    }
+    return sorted;
+  }
+  async create_payment_url(data) {
+    process.env.TZ = 'Asia/Ho_Chi_Minh';
+
+    const date = new Date();
+    const createDate = moment(date).format('YYYYMMDDHHmmss');
+    const ipAddr = '192.168.1.116';
+    // req.headers['x-forwarded-for'] ||
+    // req.connection.remoteAddress ||
+    // req.socket.remoteAddress ||
+    // req.connection.socket.remoteAddress;
+
+    const tmnCode = process.env.VNP_TMCODE;
+    const secretKey = process.env.vnp_HashSecret;
+    const vnpUrl = process.env.VNP_URL;
+    const returnUrl = process.env.VN_PAY_RETURN_URL;
+    const orderId = moment(date).format('DDHHmmss');
+    const amount = data.price;
+    //let orderCode = data.orderCode;
+    const bankCode = 'NCB';
+
+    const locale = data.language;
+    if (locale === null || locale === '') {
+      locale = 'vn';
+    }
+    const currCode = 'VND';
+    const vnp_Params = {};
+    vnp_Params['vnp_Version'] = '2.1.0';
+    vnp_Params['vnp_Command'] = 'pay';
+    vnp_Params['vnp_TmnCode'] = tmnCode;
+    vnp_Params['vnp_Locale'] = locale;
+    vnp_Params['vnp_CurrCode'] = currCode;
+    vnp_Params['vnp_TxnRef'] = orderId;
+    vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
+    vnp_Params['vnp_OrderType'] = 'other';
+    vnp_Params['vnp_Amount'] = amount * 100;
+    vnp_Params['vnp_ReturnUrl'] = returnUrl;
+    vnp_Params['vnp_IpAddr'] = ipAddr;
+    vnp_Params['vnp_CreateDate'] = createDate;
+    if (bankCode !== null && bankCode !== '') {
+      vnp_Params['vnp_BankCode'] = bankCode;
+    }
+    vnp_Params['vnp_SecureHashType'] = 'SHA256';
+    vnp_Params = await this.sortObject(vnp_Params);
+    const signData = querystring.stringify(vnp_Params, { encode: false });
+    const hmac = crypto.createHmac('sha256', secretKey);
+    const signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+    vnp_Params['vnp_SecureHash'] = signed;
+    vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
+    return vnpUrl;
+  }
+  async return(req, res) {
+    // let vnp_Params = req.query;
+    // let secureHash = vnp_Params['vnp_SecureHash'];
+    // delete vnp_Params['vnp_SecureHash'];
+    // delete vnp_Params['vnp_SecureHashType'];
+    // vnp_Params = sortObject(vnp_Params);
+    // //let config = require('config');
+    // // let tmnCode = config.get('vnp_TmnCode');
+    // // let secretKey = config.get('vnp_HashSecret');
+    // let tmnCode = process.env.VNP_TMCODE;
+    // let secretKey = process.env.VNP_HASHSECRET;
+    // let querystring = require('qs');
+    // let signData = querystring.stringify(vnp_Params, { encode: false });
+    // let crypto = require('crypto');
+    // let hmac = crypto.createHmac('sha512', secretKey);
+    // let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+    // if (secureHash === signed) {
+    //   //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+    //   res.render('success', { code: vnp_Params['vnp_ResponseCode'] });
+    // } else {
+    //   res.render('success', { code: '97' });
+    // }
   }
 }
 module.exports = OrderService;
