@@ -272,4 +272,9 @@ module.exports = {
       next(error);
     }
   },
+  create_VN_PAY: async (req, res, next) => {
+    try {
+      //const data = OrderModel.paypal(req.body);
+    } catch (error) {}
+  },
 };

@@ -358,6 +358,19 @@ class CustomerValidate {
     }
   }
   static checkChangePassword(data) {
+    if (data.oldPassword) {
+      if (data.oldPassword.length < 5 || data.oldPassword.length > 20) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Mật khẩu phải từ 5 đến 20 kí tự',
+        });
+      }
+    } else {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Yêu cầu nhập mật khẩu cũ',
+      });
+    }
     if (data.newPassword) {
       if (data.newPassword.length < 5 || data.newPassword.length > 20) {
         throw ErrorModel.initWithParams({
@@ -369,6 +382,19 @@ class CustomerValidate {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.INVALID_REQUEST,
         message: 'Yêu cầu nhập mật khẩu mới',
+      });
+    }
+    if (data.rePassword) {
+      if (data.rePassword.length < 5 || data.rePassword.length > 20) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Mật khẩu phải từ 5 đến 20 kí tự',
+        });
+      }
+    } else {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message: 'Yêu cầu nhập mật khẩu xác nhận ',
       });
     }
   }
