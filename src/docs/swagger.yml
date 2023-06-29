@@ -1381,7 +1381,21 @@ paths:
           name: price VN PAY
           description: Data VN PAY
           schema:
-            $ref: '#/definitions/Paypal'
+            $ref: '#/definitions/VnPay'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/return:
+    get:
+      x-swagger-router-controller: order
+      operationId: return_VN_PAY
+      description: create VN PAY
+      tags:
+        - ERP-order
       responses:
         '200':
           description: Pong
@@ -1817,6 +1831,13 @@ definitions:
     type: object
     properties:
       price:
+        type: string
+  VnPay:
+    type: object
+    properties:
+      price:
+        type: string
+      orderCode:
         type: string
   momo:
     type: object

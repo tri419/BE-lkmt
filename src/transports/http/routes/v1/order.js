@@ -7,6 +7,7 @@ const {
 const { loggerService } = require('../../../../libs/logger');
 
 const paypal = require('paypal-rest-sdk');
+const OrderService = require('../../../../domain/order');
 /**
  * @typedef {import("express").Request} Request
  * @typedef {import("express").Response} Response
@@ -274,7 +275,22 @@ module.exports = {
   },
   create_VN_PAY: async (req, res, next) => {
     try {
-      //const data = OrderModel.paypal(req.body);
-    } catch (error) {}
+      const data = OrderModel.VnPay(req.body);
+      const output = await orderService.create_payment_url(data);
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  return_VN_PAY: async (req, res, next) => {
+    try {
+      const output = await orderService.return(req, res);
+      return output;
+    } catch (error) {
+      next(error);
+    }
   },
 };
