@@ -44,6 +44,9 @@ const OrderSchema = new schema(
       type: String,
       required: false,
     },
+    paid: {
+      type: Boolean,
+    },
     phone: {
       type: String,
     },

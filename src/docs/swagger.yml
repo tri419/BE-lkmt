@@ -1393,7 +1393,21 @@ paths:
     get:
       x-swagger-router-controller: order
       operationId: return_VN_PAY
-      description: create VN PAY
+      description: return VN PAY
+      tags:
+        - ERP-order
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
+  /order/vnpay_ipn:
+    get:
+      x-swagger-router-controller: order
+      operationId: VN_PAY_IPN
+      description: VN PAY IPN
       tags:
         - ERP-order
       responses:
@@ -1836,7 +1850,7 @@ definitions:
     type: object
     properties:
       price:
-        type: string
+        type: integer
       orderCode:
         type: string
   momo:

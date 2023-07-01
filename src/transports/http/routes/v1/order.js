@@ -288,7 +288,21 @@ module.exports = {
   return_VN_PAY: async (req, res, next) => {
     try {
       const output = await orderService.return(req, res);
-      return output;
+      res.json({
+        success: true,
+        code: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  VN_PAY_IPN: async (req, res, next) => {
+    try {
+      const output = await orderService.return(req, res);
+      res.json({
+        success: true,
+        code: output,
+      });
     } catch (error) {
       next(error);
     }
