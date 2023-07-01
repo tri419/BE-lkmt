@@ -49,6 +49,9 @@ class Order extends Base {
 
     this.totalAmount = undefined;
     /** @type {String} */
+
+    this.paid = undefined;
+    /** @type {Boolean} */
   }
   static fromMongo(input) {
     if (input == null || input instanceof mongoose.Types.ObjectId) {
@@ -70,6 +73,7 @@ class Order extends Base {
       output.transportFee = input.transportFee;
       output.status = input.status;
       output.typePayment = input.typePayment;
+      output.paid = input.paid;
       output.phone = input.phone;
       output.email = input.email;
       output.address = {
@@ -117,6 +121,7 @@ class Order extends Base {
       output.transportFee = Utils.getInteger(input.transportFee, 0);
       output.status = Utils.getString(input.status, 'wait_for_confirmation');
       output.typePayment = Utils.getString(input.typePayment, 'COD');
+      output.paid = Utils.getBoolean(input.paid, false);
       output.phone = Utils.getString(input.phone, '');
       output.address = {
         street: Utils.getString(input.address.street, ''),
