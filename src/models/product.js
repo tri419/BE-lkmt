@@ -92,7 +92,7 @@ class Product extends Base {
     const output = {};
     if (input != null) {
       output.brand = Utils.getString(input.brand, '');
-      output.code = Utils.getString(input.code, '');
+      //output.code = Utils.getString(input.code, '');
       output.name = Utils.getString(input.name, '');
       output.productType = Utils.getString(input.productType, '');
       output.nameUnsigned = Utils.getString(Utils.tvkd(input.name), '');
