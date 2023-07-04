@@ -81,6 +81,12 @@ const CustomerSchema = mongoose.Schema(
         ward: {
           type: String,
         },
+        district_Id: {
+          type: String,
+        },
+        ward_Id: {
+          type: String,
+        },
         status: {
           type: Boolean,
         },

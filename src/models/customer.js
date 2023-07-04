@@ -107,6 +107,8 @@ class Customer extends Base {
           province: Utils.getString(input.province, ''),
           district: Utils.getString(input.district, ''),
           ward: Utils.getString(input.ward, ''),
+          district_Id: Utils.getString(input.district_Id, ''),
+          ward_Id: Utils.getString(input.ward_Id, ''),
           status: true,
         },
       ];
