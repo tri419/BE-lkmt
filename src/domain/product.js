@@ -51,7 +51,7 @@ class ProductService {
   async create(data) {
     data.code = await this.repo.generateCode();
     data.uid = ulid();
-    const checkPrice = data.price * (100 - data.discount);
+    const checkPrice = (data.price * (100 - data.discount)) / 100;
     if (data.discountPrice !== checkPrice) {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.NOT_FOUND,

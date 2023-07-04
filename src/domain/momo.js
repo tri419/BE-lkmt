@@ -21,7 +21,7 @@ class MomoPaymentService {
   async createPayment({
     orderId,
     amount,
-    orderInfo = 'Your message',
+    orderInfo = 'Thanh toán đơn hàng online',
     returnUrl = 'https://business.momo.vn/return',
   }) {
     try {
