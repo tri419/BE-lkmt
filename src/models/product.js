@@ -30,6 +30,8 @@ class Product extends Base {
     this.brand = undefined;
     /** @type {Array} */
     this.descriptionDetail = undefined;
+    /** @type {Array} */
+    this.image = undefined;
   }
   static fromMongo(input) {
     if (input == null || input instanceof mongoose.Types.ObjectId) {

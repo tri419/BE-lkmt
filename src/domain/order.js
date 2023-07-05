@@ -215,6 +215,7 @@ class OrderService {
   async completeOrder(msg) {
     const { uid, data } = msg;
     data.deliveryDate = moment(new Date()).format('YYYY/MM/DD');
+    data.paid = true;
     const findOrder = await this.repo.findOne('uid', uid);
     if (!findOrder) {
       throw ErrorModel.initWithParams({
@@ -381,7 +382,8 @@ class OrderService {
     let vnpUrl = process.env.vnp_Url;
     const returnUrl = process.env.vnp_ReturnUrl;
     const amount = data.price;
-    //let orderCode = data.orderCode;
+    //let orderId = moment(date).format('DDHHmmss');
+    const orderCode = data.orderCode;
     //let bankCode = 'NCB';
 
     //let locale = data.language;
@@ -395,8 +397,8 @@ class OrderService {
     vnp_Params['vnp_TmnCode'] = tmnCode;
     vnp_Params['vnp_Locale'] = 'vn';
     vnp_Params['vnp_CurrCode'] = 'VND';
-    vnp_Params['vnp_TxnRef'] = data.orderCode;
-    vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + data.orderCode;
+    vnp_Params['vnp_TxnRef'] = orderCode;
+    vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderCode;
     vnp_Params['vnp_OrderType'] = 'other';
     vnp_Params['vnp_Amount'] = amount * 100;
     vnp_Params['vnp_ReturnUrl'] = returnUrl;
@@ -435,14 +437,17 @@ class OrderService {
           uid: findOrder.uid,
           data: {
             paid: true,
+            status: 'approved',
           },
         };
         const output = await this.repo.updateOrder(msg);
         return vnp_Params['vnp_ResponseCode'];
       }
     } else {
-      //res.render('success', { code: '97' });
-      return '97';
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Lỗi thanh toán không thành công',
+      });
     }
   }
   async ipnVnPay() {

@@ -90,6 +90,7 @@ class ProductService {
       'uid',
       findProduct.productType,
     );
+    const totalProductSell = await this.repo.totalProductSell(uid);
     const findBrand = await this.repoBrand.findOne('uid', findProduct.brand);
     const output = {
       code: findProduct.code,
@@ -105,6 +106,7 @@ class ProductService {
       descriptionSummary: findProduct.descriptionSummary,
       descriptionDetail: findProduct.descriptionDetail,
       quantity: findProduct.quantity,
+      totalProductSell: totalProductSell,
     };
     return output;
   }
