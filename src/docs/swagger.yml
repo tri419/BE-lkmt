@@ -1311,6 +1311,30 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /order/onlinePayment/cancel/{orderCode}:
+    put:
+      x-swagger-router-controller: order
+      operationId: onlinePaymentFail
+      description: Online Payment Fail order
+      tags:
+        - ERP-order
+      parameters:
+        - in: path
+          name: orderCode
+          required: true
+          type: string
+        - in: body
+          name: cancel order
+          description: cancel order
+          schema:
+            $ref: '#/definitions/cancelOrder'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /order/listOrderShipper:
     get:
       x-swagger-router-controller: order

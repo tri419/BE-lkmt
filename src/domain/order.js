@@ -413,7 +413,7 @@ class OrderService {
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
     return vnpUrl;
   }
-  async return(req) {
+  async return(req, res) {
     let vnp_Params = req.query;
     const secureHash = vnp_Params['vnp_SecureHash'];
     delete vnp_Params['vnp_SecureHash'];
@@ -424,6 +424,8 @@ class OrderService {
     const signData = querystring.stringify(vnp_Params, { encode: false });
     const hmac = crypto.createHmac('sha512', secretKey);
     const signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+    const successUrl = 'http://localhost:3000/successOrder';
+    const failureUrl = 'http://localhost:3000/failureOrder';
     if (secureHash === signed) {
       //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
       //res.render('success', { code: vnp_Params['vnp_ResponseCode'] });
@@ -441,13 +443,11 @@ class OrderService {
           },
         };
         const output = await this.repo.updateOrder(msg);
-        return vnp_Params['vnp_ResponseCode'];
+        //return vnp_Params['vnp_ResponseCode'];
+        res.redirect(successUrl);
+      } else {
+        res.redirect(failureUrl);
       }
-    } else {
-      throw ErrorModel.initWithParams({
-        ...ERROR.VALIDATION.NOT_FOUND,
-        message: 'Lỗi thanh toán không thành công',
-      });
     }
   }
   async ipnVnPay() {
@@ -463,6 +463,20 @@ class OrderService {
     // let signData = querystring.stringify(vnp_Params, { encode: false });
     // let hmac = crypto.createHmac('sha512', secretKey);
     // let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+  }
+  async onlinePaymentFailOrder(orderCode, data) {
+    const findOrder = await this.repo.findOne('orderCode', orderCode);
+    if (!findOrder) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+      });
+    }
+    const msg = {
+      uid: findOrder.uid,
+      data: data,
+    };
+    const output = await this.repo.updateOrder(msg);
+    return output;
   }
 }
 module.exports = OrderService;
