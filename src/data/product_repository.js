@@ -143,6 +143,34 @@ class ProductRepository extends BaseRepository {
       },
       {
         $lookup: {
+          from: 'orders',
+          localField: 'uid',
+          foreignField: 'product.productId',
+          pipeline: [
+            {
+              $match: {
+                status: {
+                  $ne: 'cancelled',
+                },
+              },
+            },
+            {
+              $unwind: '$product',
+            },
+            {
+              $group: {
+                _id: '$product.productId',
+                totalProductSell: {
+                  $sum: '$product.number',
+                },
+              },
+            },
+          ],
+          as: 'productOrder',
+        },
+      },
+      {
+        $lookup: {
           from: 'producttypes',
           localField: 'productType',
           foreignField: 'uid',
@@ -198,6 +226,9 @@ class ProductRepository extends BaseRepository {
           brand: '$brand.name',
           status: 1,
           createdAt: 1,
+          totalProductSell: {
+            $sum: '$productOrder.totalProductSell',
+          },
         },
       },
     ];
@@ -245,6 +276,96 @@ class ProductRepository extends BaseRepository {
       createdAt: -1,
     });
     return coll;
+  }
+  async totalProductSell(productId) {
+    const pipe = [
+      {
+        $match: { uid: productId },
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: 'uid',
+          foreignField: 'product.productId',
+          pipeline: [
+            {
+              $match: {
+                status: {
+                  $ne: 'cancelled',
+                },
+              },
+            },
+            {
+              $unwind: '$product',
+            },
+            {
+              $match: {
+                'product.productId': productId,
+              },
+            },
+            {
+              $group: {
+                _id: '$product.productId',
+                totalProductSell: {
+                  $sum: '$product.number',
+                },
+              },
+            },
+          ],
+          as: 'productOrder',
+        },
+      },
+      {
+        $project: {
+          totalProductSell: '$productOrder.totalProductSell',
+        },
+      },
+    ];
+    const coll = await ProductDto.aggregate(pipe);
+    return coll[0].totalProductSell[0];
+  }
+  async customerIdBySell(productId) {
+    const pipe = [
+      {
+        $match: { uid: productId },
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: 'uid',
+          foreignField: 'product.productId',
+          pipeline: [
+            {
+              $match: {
+                status: 'completed',
+              },
+            },
+            {
+              $unwind: '$product',
+            },
+            {
+              $match: {
+                'product.productId': productId,
+              },
+            },
+            {
+              $group: {
+                _id: '$customerId',
+                customerId: { $first: '$customerId' },
+              },
+            },
+          ],
+          as: 'customerBySell',
+        },
+      },
+      {
+        $project: {
+          customer: '$customerBySell.customerId',
+        },
+      },
+    ];
+    const coll = await ProductDto.aggregate(pipe);
+    return coll[0].customer;
   }
 }
 module.exports = ProductRepository;

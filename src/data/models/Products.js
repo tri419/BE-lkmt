@@ -76,6 +76,25 @@ const ProductSchema = new schema(
       type: Number,
       required: true,
     },
+    customerComment: [
+      {
+        customerId: {
+          type: String,
+        },
+        comment: {
+          type: String,
+        },
+        rating: {
+          type: Number,
+        },
+        imageProduct: {
+          type: String,
+        },
+        createdDate: {
+          type: Date,
+        },
+      },
+    ],
   },
   { timestamps: true },
 );

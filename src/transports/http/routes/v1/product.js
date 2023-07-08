@@ -101,4 +101,17 @@ module.exports = {
       next(error);
     }
   },
+  customerComment: async (req, res, next) => {
+    try {
+      const { value: uid } = req.swagger.params.uid;
+      const data = ProductModel.fromCustomerComment(req.body);
+      const output = await productService.customerComment({ uid, data });
+      res.json({
+        success: true,
+        results: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

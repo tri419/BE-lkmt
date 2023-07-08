@@ -90,6 +90,33 @@ class ProductService {
       'uid',
       findProduct.productType,
     );
+    const totalProductSell = await this.repo.totalProductSell(uid);
+    const customerIdBySell = await this.repo.customerIdBySell(uid);
+    const customerComment = [];
+    let totalRating = 0;
+
+    for (let i = 0; i < findProduct.customerComment.length; i++) {
+      const nameCustomer = await this.repoCustomer.findOne(
+        'uid',
+        findProduct.customerComment[i].customerId,
+      );
+      if (!nameCustomer) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.NOT_FOUND,
+          message: 'Không tìm thấy tên khách hàng nào',
+        });
+      }
+      customerComment.push({
+        customerId: findProduct.customerComment[i].customerId,
+        comment: findProduct.customerComment[i].comment,
+        rating: findProduct.customerComment[i].rating,
+        imageProduct: findProduct.customerComment[i].imageProduct,
+        createdDate: findProduct.customerComment[i].createdDate,
+        nameCustomer: nameCustomer.name,
+      });
+      totalRating += findProduct.customerComment[i].rating;
+    }
+    const averageRating = totalRating / findProduct.customerComment.length;
     const findBrand = await this.repoBrand.findOne('uid', findProduct.brand);
     const output = {
       code: findProduct.code,
@@ -105,6 +132,10 @@ class ProductService {
       descriptionSummary: findProduct.descriptionSummary,
       descriptionDetail: findProduct.descriptionDetail,
       quantity: findProduct.quantity,
+      totalProductSell: totalProductSell,
+      customerIdBySell: customerIdBySell,
+      customerComment: customerComment,
+      averageRating: averageRating.toFixed(1),
     };
     return output;
   }
@@ -140,6 +171,52 @@ class ProductService {
   async listProduct() {
     const output = await this.repo.listProduct();
     return output;
+  }
+  async customerComment(msg) {
+    const { uid, data } = msg;
+    const findProduct = await this.repo.findOne('uid', uid);
+    if (!findProduct) {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.NOT_FOUND,
+        message: 'Không tìm thấy sản phẩm',
+      });
+    }
+    const findCustomerOnProduct = findProduct.customerComment.filter(
+      (item) => item.customerId === data.customerId,
+    );
+    if (findCustomerOnProduct.length < 1) {
+      findProduct.customerComment.push({
+        customerId: data.customerId,
+        comment: data.comment,
+        rating: data.rating,
+        imageProduct: data.imageProduct,
+        createdDate: new Date(),
+      });
+      const ret = await this.repo.update(
+        {
+          uid: uid,
+        },
+        {
+          $set: {
+            customerComment: findProduct.customerComment,
+          },
+        },
+      );
+      if (!ret) {
+        throw ErrorModel.initWithParams({
+          ...ERROR.VALIDATION.INVALID_REQUEST,
+          message: 'Cập nhật không thành công',
+        });
+      }
+    } else {
+      throw ErrorModel.initWithParams({
+        ...ERROR.VALIDATION.INVALID_REQUEST,
+        message:
+          'Khách hàng đã bình luận sản phẩm này, nếu có lỗi gì xin liên hệ với cửa hàng',
+      });
+    }
+
+    return ret;
   }
 }
 module.exports = ProductService;

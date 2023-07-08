@@ -30,6 +30,10 @@ class Product extends Base {
     this.brand = undefined;
     /** @type {Array} */
     this.descriptionDetail = undefined;
+    /** @type {Array} */
+    this.image = undefined;
+    /** @type {Array} */
+    this.customerComment = undefined;
   }
   static fromMongo(input) {
     if (input == null || input instanceof mongoose.Types.ObjectId) {
@@ -55,6 +59,7 @@ class Product extends Base {
       output.quantity = input.quantity;
       output.createdAt = input.createdAt;
       output.updatedAt = input.updatedAt;
+      output.customerComment = input.customerComment;
     }
     return output;
   }
@@ -79,6 +84,7 @@ class Product extends Base {
       output.descriptionSummary = Utils.getString(input.descriptionSummary, '');
       output.descriptionDetail = Utils.getArray(input.descriptionDetail, []);
       output.image = Utils.getArray(input.image, []);
+      output.customerComment = Utils.getArray(input.customerComment, []);
       output.quantity = Utils.getInteger(input.quantity, 0);
       output.includedFields = Utils.extractIncludeAttributes(
         input.includedFields,
@@ -135,6 +141,17 @@ class Product extends Base {
     if (Number.isNaN(output.page) || Number.isNaN(output.limit)) {
       output.limit = 100;
       output.page = 1;
+    }
+    return output;
+  }
+  static fromCustomerComment(input) {
+    const output = {};
+    if (input != null) {
+      output.customerId = Utils.getString(input.customerId, '');
+      output.comment = Utils.getString(input.comment, '');
+      output.rating = Utils.getFloat(input.rating, 0.0);
+      output.imageProduct = Utils.getString(input.imageProduct, '');
+      //output.createdDate = Utils.getDateFromString(input.createdDate);
     }
     return output;
   }
