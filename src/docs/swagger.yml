@@ -178,6 +178,30 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Pong'
+  /product/customerComment/{uid}:
+    put:
+      x-swagger-router-controller: product
+      operationId: customerComment
+      description: customerComment product by id
+      tags:
+        - ERP-product
+      parameters:
+        - name: uid
+          type: string
+          in: path
+          required: true
+        - in: body
+          name: CustomerComment
+          description: Data CustomerComment
+          schema:
+            $ref: '#/definitions/UpdateCustomerComment'
+      responses:
+        '200':
+          description: Pong
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Pong'
   /productType:
     post:
       x-swagger-router-controller: productType
@@ -1789,6 +1813,19 @@ definitions:
         type: number
       price:
         type: number
+  UpdateCustomerComment:
+    type: object
+    properties:
+      customerId:
+        type: string
+      comment:
+        type: string
+      rating:
+        type: number
+      imageProduct:
+        type: string
+      # createdDate:
+      #   type: string
   Order:
     type: object
     properties:

@@ -299,6 +299,11 @@ class ProductRepository extends BaseRepository {
               $unwind: '$product',
             },
             {
+              $match: {
+                'product.productId': productId,
+              },
+            },
+            {
               $group: {
                 _id: '$product.productId',
                 totalProductSell: {
@@ -312,14 +317,55 @@ class ProductRepository extends BaseRepository {
       },
       {
         $project: {
-          totalProductSell: {
-            $sum: '$productOrder.totalProductSell',
-          },
+          totalProductSell: '$productOrder.totalProductSell',
         },
       },
     ];
     const coll = await ProductDto.aggregate(pipe);
-    return coll[0].totalProductSell;
+    return coll[0].totalProductSell[0];
+  }
+  async customerIdBySell(productId) {
+    const pipe = [
+      {
+        $match: { uid: productId },
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: 'uid',
+          foreignField: 'product.productId',
+          pipeline: [
+            {
+              $match: {
+                status: 'completed',
+              },
+            },
+            {
+              $unwind: '$product',
+            },
+            {
+              $match: {
+                'product.productId': productId,
+              },
+            },
+            {
+              $group: {
+                _id: '$customerId',
+                customerId: { $first: '$customerId' },
+              },
+            },
+          ],
+          as: 'customerBySell',
+        },
+      },
+      {
+        $project: {
+          customer: '$customerBySell.customerId',
+        },
+      },
+    ];
+    const coll = await ProductDto.aggregate(pipe);
+    return coll[0].customer;
   }
 }
 module.exports = ProductRepository;
