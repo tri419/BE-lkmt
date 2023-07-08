@@ -288,10 +288,10 @@ module.exports = {
   return_VN_PAY: async (req, res, next) => {
     try {
       const output = await orderService.return(req, res);
-      res.json({
-        success: true,
-        code: output,
-      });
+      // res.json({
+      //   success: true,
+      //   code: output,
+      // });
     } catch (error) {
       next(error);
     }
@@ -302,6 +302,19 @@ module.exports = {
       res.json({
         success: true,
         code: output,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  onlinePaymentFail: async (req, res, next) => {
+    try {
+      const { value: orderCode } = req.swagger.params.orderCode;
+      const data = OrderModel.cancelOrder(req.body);
+      const output = await orderService.onlinePaymentFailOrder(orderCode, data);
+      res.json({
+        success: true,
+        results: output,
       });
     } catch (error) {
       next(error);
