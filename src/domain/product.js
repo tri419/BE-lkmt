@@ -208,6 +208,7 @@ class ProductService {
           message: 'Cập nhật không thành công',
         });
       }
+      return ret;
     } else {
       throw ErrorModel.initWithParams({
         ...ERROR.VALIDATION.INVALID_REQUEST,
@@ -215,8 +216,6 @@ class ProductService {
           'Khách hàng đã bình luận sản phẩm này, nếu có lỗi gì xin liên hệ với cửa hàng',
       });
     }
-
-    return ret;
   }
 }
 module.exports = ProductService;
