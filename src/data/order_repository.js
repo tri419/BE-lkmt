@@ -519,6 +519,9 @@ class OrderRepository extends BaseRepository {
           name: {
             $first: '$productname.name',
           },
+          image: {
+            $first: '$productname.image',
+          },
           numberOrders: {
             $count: {},
           },
@@ -601,6 +604,9 @@ class OrderRepository extends BaseRepository {
           },
           name: {
             $first: '$productname.name',
+          },
+          image: {
+            $first: '$productname.image',
           },
           numberOrders: {
             $count: {},
