@@ -10,13 +10,11 @@ const path = require('path');
 const swaggerTools = require('swagger-tools');
 const yaml = require('js-yaml');
 const cors = require('cors');
-
 const { ErrorModel } = require('../../models');
 const { ERROR } = require('../../constants');
 const { corsMiddleWare } = require('./middlewares/cors');
 const { logger, transport } = require('../../libs/logger');
 const { pinoHtttpMiddleware } = require('./middlewares/http_logger');
-
 const bearerRegex = /^Bearer\s/;
 
 /**
@@ -100,7 +98,6 @@ class HttpServer {
         this.opts.queryBlackList,
       ),
     );
-
     this.app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
     this.app.use(bodyParser.json({ limit: '50mb' }));
     // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
