@@ -424,8 +424,8 @@ class OrderService {
     const signData = querystring.stringify(vnp_Params, { encode: false });
     const hmac = crypto.createHmac('sha512', secretKey);
     const signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
-    const successUrl = 'http://localhost:3000/successOrder';
-    const failureUrl = 'http://localhost:3000/failureOrder';
+    const successUrl = 'http://localhost:3001/successOrder';
+    const failureUrl = 'http://localhost:3001/failureOrder';
     if (secureHash === signed) {
       //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
       //res.render('success', { code: vnp_Params['vnp_ResponseCode'] });
